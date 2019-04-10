@@ -1,0 +1,27 @@
+#   Ensure the mysql2 gem is defined in your Gemfile
+#   gem 'mysql2'
+#
+default: &default
+  adapter: mysql2
+  encoding: utf8
+  host: <%= ENV['USER_DB_HOST'] || '127.0.0.1' %>
+  port: <%= (ENV['USER_DB_PORT'] || '3306').to_i %>
+  database: <%= ENV['USER_DB_NAME'] || 'mssng_users' %>
+  username: <%= ENV['USER_DB_USERNAME'] || 'mssng_users' %>
+  password: <%= ENV['USER_DB_PASSWORD'] || 'mssng_users' %>
+
+development:
+  <<: *default
+
+# Warning: The database defined as "test" will be erased and
+# re-generated from your development database when you run "rake".
+# Do not set this db to the same as development or production.
+test: &test
+  <<: *default
+  database: test_mssng_users
+
+production:
+  <<: *default
+
+cucumber:
+  <<: *test

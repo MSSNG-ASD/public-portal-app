@@ -1,0 +1,20 @@
+<div class="row">
+  <div class="col">
+    <h1><%= dt("#{controller_name}.#{action_name}.title", model: dt("#{controller_name}.#{action_name}.model"), instance: @annotation.id) %></h1>
+  </div>
+</div>
+<dl class="row align-items-center">
+  <dt class="col-6 col-sm-4 col-md-3 text-right"><%= Annotation.human_attribute_name(:effects_with_impacts) %></dt>
+  <dd class="col-6 col-sm-8 col-md-9 mb-0"><%= @annotation.effects_with_impacts %></dd>
+  <dt class="col-6 col-sm-4 col-md-3 text-right"><%= Annotation.human_attribute_name(:paths) %></dt>
+  <dd class="col-6 col-sm-8 col-md-9 mb-0"><%= @annotation.paths %></dd>
+	<% Annotation.attrs.each do |a| %>
+	  <dt class="col-6 col-sm-4 col-md-3 text-right"><%= Annotation.human_attribute_name(a.to_sym) %></dt>
+	  <dd class="col-6 col-sm-8 col-md-9 mb-0"><%= @annotation.send(a) %></dd>
+	<% end %>
+</dl>
+<div class="row">
+  <div class="col form-actions">
+		<%= link_to dt('actions.back'), :back, class: 'btn btn-primary' %>
+  </div>
+</div>

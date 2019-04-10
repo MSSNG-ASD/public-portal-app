@@ -1,0 +1,13 @@
+<div class="row">
+  <div class="col">
+    <h1><%= dt("#{controller_name}.#{action_name}.title", :model => dt("#{controller_name}.#{action_name}.model"), :instance => @subject_sample_id) %></h1>
+  </div>
+</div>
+<div class="row">
+  <div class="col">
+    <% if @platform.eql?('Complete Genomics') %>
+      <%= dt("notices.no_reads") %>
+    <% end %>
+    <%= content_tag(:div, "", id: "igv-container", data: {token: current_user.token, locus: @locus, tracks: @tracks}) %>
+  </div>
+</div>

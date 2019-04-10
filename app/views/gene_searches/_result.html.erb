@@ -1,0 +1,158 @@
+<div class="card">
+  <h5 class="card-header"><%= dt("database.gene") %></h5>
+  <div class="card-body">
+		<div class="row">
+		  <div class="col-2 font-weight-bold"><%= Gene.human_attribute_name(:gene_id) %></div>
+		  <div class="col-10"><%= result.gene_id %></div>
+		</div>
+		<div class="row">
+		  <div class="col-2 font-weight-bold"><%= Gene.human_attribute_name(:symbol) %></div>
+		  <div class="col-10"><%= link_to_ref_gene(result.symbol) %></div>
+		</div>
+		<div class="row">
+		  <div class="col-2 font-weight-bold"><%= Gene.human_attribute_name(:chromosome) %></div>
+		  <div class="col-10"><%= result.chrom %></div>
+		</div>
+		<div class="row">
+		  <div class="col-2 font-weight-bold"><%= Gene.human_attribute_name(:map_location) %></div>
+		  <div class="col-10"><%= link_to_ucsc_postion(result.mapLocation) %></div>
+		</div>
+		<div class="row">
+		  <div class="col-2 font-weight-bold"><%= Gene.human_attribute_name(:synonyms) %></div>
+		  <div class="col-10"><%= result.synonyms.split("|").map{|symbol| link_to_ref_gene(symbol)}.join(", ").html_safe %></div>
+		</div>
+		<div class="row">
+		  <div class="col-2 font-weight-bold"><%= Gene.human_attribute_name(:description) %></div>
+		  <div class="col-10"><%= result.description %></div>
+		</div>
+		<div class="row">
+		  <div class="col-2 font-weight-bold"><%= Gene.human_attribute_name(:type_of_gene) %></div>
+		  <div class="col-10"><%= result.typeOfGene %></div>
+		</div>
+		<div class="row">
+		  <div class="col-2 font-weight-bold"><%= Gene.human_attribute_name(:dbXrefs) %></div>
+		  <div class="col-10"><%= result.dbXrefs.split("|").map{|xref| link_to_xref(xref)}.join(", ").html_safe %></div>
+		</div>
+  </div>
+</div>
+
+<div class="card">
+  <h5 class="card-header"><%= dt("database.ref_seq") %></h5>
+  <div class="card-body">
+		<dl class="dl-horizontal">
+		  <dt><%= Gene.human_attribute_name(:chromosome) %></dt>
+		  <dd><%= result.chrom %></dd>
+		  <dt><%= Gene.human_attribute_name(:start_position) %></dt>
+		  <dd><%= result.range[0] %></dd>
+		  <dt><%= Gene.human_attribute_name(:end_position) %></dt>
+		  <dd><%= result.range[1] %></dd>
+		</dl>
+		<table class="table table-striped table-bordered">
+		  <thead>
+			  <tr>
+			    <th><%= Gene.human_attribute_name(:rna_accession) %></th>
+			  </tr>
+		  </thead>
+		  <tbody>
+				<% result.ref_genes.each do |ref_gene| %>
+				  <tr>
+				    <td><%= link_to_ncbi(ref_gene.refSeqID) %></td>
+				  </tr>
+				<% end %>
+		  </tbody>
+		</table>
+	</div>
+</div>
+
+<% if result.condition %>
+	<div class="card">
+		<h5 class="card-header"><%= dt("database.condition") %></h5>
+		<div class="card-body">
+			<div class="row">
+				<div class="col-2 font-weight-bold"><%= Gene.human_attribute_name(:condition) %></div>
+				<div class="col-10"><%= result.condition.condition %></div>
+			</div>
+			<div class="row">
+				<div class="col-2 font-weight-bold"><%= Gene.human_attribute_name(:inheritance) %></div>
+				<div class="col-10"><%= result.condition.inheritance %></div>
+			</div>
+			<div class="row">
+				<div class="col-2 font-weight-bold"><%= Gene.human_attribute_name(:age_group) %></div>
+				<div class="col-10"><%= result.condition.ageGroup %></div>
+			</div>
+			<div class="row">
+				<div class="col-2 font-weight-bold"><%= Gene.human_attribute_name(:allelic_conditions) %></div>
+				<div class="col-10"><%= result.condition.allelicConditions %></div>
+			</div>
+			<div class="row">
+				<div class="col-2 font-weight-bold"><%= Gene.human_attribute_name(:manifestation_categories) %></div>
+				<div class="col-10"><%= result.condition.manifestationCategories %></div>
+			</div>
+			<div class="row">
+				<div class="col-2 font-weight-bold"><%= Gene.human_attribute_name(:intervention_categories) %></div>
+				<div class="col-10"><%= result.condition.interventionCategories %></div>
+			</div>
+			<div class="row">
+				<div class="col-2 font-weight-bold"><%= Gene.human_attribute_name(:intervention_rationale) %></div>
+				<div class="col-10"><%= result.condition.interventionRationale %></div>
+			</div>
+			<div class="row">
+				<div class="col-2 font-weight-bold"><%= Gene.human_attribute_name(:comments) %></div>
+				<div class="col-10"><%= result.condition.comments %></div>
+			</div>
+			<div class="row">
+				<div class="col-2 font-weight-bold"><%= Gene.human_attribute_name(:references) %></div>
+				<div class="col-10"><%= result.condition.references.split(";").map{|reference| link_to_pubmed(reference.strip)}.join(", ").html_safe %></div>
+			</div>
+		</div>
+	</div>
+<% end %>
+
+<div class="card">
+  <h5 class="card-header"><%= dt("database.phenotype") %></h5>
+  <div class="card-body">
+		<table class="table table-striped table-bordered">
+		  <thead>
+			  <tr>
+			    <th><%= Gene.human_attribute_name(:disease_id) %></th>
+			    <th><%= Gene.human_attribute_name(:hpo_id) %></th>
+			    <th><%= Gene.human_attribute_name(:gene_term) %></th>
+			  </tr>
+		  </thead>
+		  <tbody>
+				<% result.phenotypes.each do |phenotype| %>
+				  <tr>
+				    <td><%= link_to_xref(phenotype.database) %></td>
+				    <td><%= link_to_xref(phenotype.HPOterm) %></td>
+				    <td><%= phenotype.HPOname %></td>
+				  </tr>
+				<% end %>
+		  </tbody>
+		</table>
+  </div>
+</div>
+
+<div class="card">
+  <h5 class="card-header"><%= dt("database.omim") %></h5>
+  <div class="card-body">
+		<table class="table table-striped table-bordered">
+		  <thead>
+			  <tr>
+			    <th><%= Gene.human_attribute_name(:mim_type) %></th>
+			    <th><%= Gene.human_attribute_name(:disorder) %></th>
+			    <th><%= Gene.human_attribute_name(:mim_phenotype) %></th>
+			  </tr>
+		  </thead>
+		  <tbody>
+				<% result.omims.each do |omim| %>
+				  <tr>
+				    <td><%= omim.MIMentryType %></td>
+				    <td><%= omim.phenotype %></td>
+				    <td><%= link_to_omim(omim.MIMphenotype) %></td>
+				  </tr>
+				<% end %>
+		  </tbody>
+		</table>
+  </div>
+</div>
+

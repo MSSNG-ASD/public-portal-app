@@ -1,0 +1,62 @@
+<h1><%= dt("#{controller_name}.#{action_name}.title", :model => dt("#{controller_name}.#{action_name}.model"), :instance => @user.email) %></h1>
+<% if @user == current_user %>
+<div class="panel panel-default">
+  <div class="panel-heading"><%= User.human_attribute_name(:gene_searches) %></div>
+  <div class="panel-body">
+    <ul>
+    	<% @user.gene_searches.limit(5).each do |gene_search| %>
+			<li><%= link_to gene_search.name, gene_search_path(gene_search) %></li>
+			<% end %>
+    </ul>
+  </div>
+	<div>
+		<%= link_to dt('actions.new', :model => GeneSearch.model_name.human), new_gene_search_path, :class => 'btn btn-success btn-sm' %>
+	</div>
+</div>
+<div class="panel panel-default">
+  <div class="panel-heading"><%= User.human_attribute_name(:subject_sample_searches) %></div>
+  <div class="panel-body">
+    <ul>
+    	<% @user.subject_sample_searches.limit(5).each do |subject_sample_search| %>
+			<li><%= link_to subject_sample_search.name, subject_sample_search_path(subject_sample_search) %></li>
+			<% end %>
+    </ul>
+  </div>
+	<div>
+		<%= link_to dt('actions.new', :model => SubjectSampleSearch.model_name.human), new_subject_sample_search_path, :class => 'btn btn-success btn-sm' %>
+	</div>
+</div>
+<div class="panel panel-default">
+  <div class="panel-heading"><%= User.human_attribute_name(:variant_searches) %></div>
+  <div class="panel-body">
+    <ul>
+      <% @user.variant_searches.limit(5).each do |variant_search| %>
+      <li><%= link_to variant_search.name, variant_search_path(variant_search) %></li>
+      <% end %>
+    </ul>
+  </div>
+  <div>
+    <%= link_to dt('actions.new', :model => VariantSearch.model_name.human), new_variant_search_path, :class => 'btn btn-success btn-sm' %>
+  </div>
+</div>
+<div class="panel panel-default">
+  <div class="panel-heading"><%= User.human_attribute_name(:trios) %></div>
+  <div class="panel-body">
+    <ul>
+    	<% @user.trios.limit(5).each do |trio| %>
+			<li><%= link_to trio.name, trio_path(trio) %></li>
+			<% end %>
+    </ul>
+  </div>
+  <div>
+		<%= link_to dt('actions.new', :model => Trio.model_name.human), new_trio_path, :class => 'btn btn-success btn-sm' %>
+	</div>
+</div>
+<% else %>
+	<dl>
+	  <dt><%= User.human_attribute_name(:name) %></dt>
+	  <dd><%= @user.email %></dd>
+	  <dt><%= User.human_attribute_name(:email) %></dt>
+	  <dd><%= mail_to @user.email %></dd>
+	</dl>
+<% end %>

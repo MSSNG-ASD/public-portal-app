@@ -1,0 +1,13 @@
+<%= simple_form_for @subject_sample_search do |f| %>
+  <div class="form-inputs">
+    <%= f.input :name, placeholder: f.object.class.human_attribute_name(:name), autofocus: true %>
+    <%= f.input :stringy_submitted_ids, input_html: {class: 'ajax-multi-select2', data: {records: f.object.samples, url: sample_selections_path, multiple: true, minimum: 3, placeholder: f.object.class.human_attribute_name(:submitted_ids_placeholder)}} %>
+    <%= f.input :stringy_index_ids, input_html: {class: 'ajax-multi-select2', data: {records: f.object.subjects, url: subject_selections_path, multiple: true, minimum: 3, placeholder: f.object.class.human_attribute_name(:index_ids_placeholder)}} %>
+    <%= f.input :dna_source, collection: ["Blood", "Saliva", "Cell line", "White blood cell"], include_blank: "All Sources" %>
+    <%= f.input :platform, collection: ["Illumina HiSeq", "Illumina HiSeqX", "Complete Genomics"], include_blank: "All Platforms" %>
+  </div>
+  <div class="form-actions">
+    <%= link_to dt('actions.cancel'), search_subject_sample_searches_path, class: 'btn btn-default' %>
+    <%= f.button :submit, class: 'btn btn-primary', value: dt("#{controller_name}.#{action_name}.submit", model: dt("#{controller_name}.#{action_name}.model")) %>
+  </div>
+<% end %>

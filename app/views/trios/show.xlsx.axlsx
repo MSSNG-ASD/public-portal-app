@@ -1,0 +1,17 @@
+wb = xlsx_package.workbook
+wb.add_worksheet(name: "Variants") do |sheet|
+  sheet.add_row [@trio.user.selected_preferences - ['igv']].flatten.map {|column| AnnotatedVariant.human_attribute_name(column.to_sym)}
+  @trio.variants.each do |variant|
+		variant_columns = []
+		[@trio.user.selected_preferences - ['igv']].flatten.each do |column|
+			if column.eql?('inheritance')
+				variant_columns << interpretted_inheritance(variant.reference_name, variant.sex, variant.inheritance)
+			elsif column.eql?('affection')
+				variant_columns << variant.interpretted_affection
+			else
+				variant_columns << variant.send(column.to_sym)
+			end
+		end
+    sheet.add_row variant_columns
+  end
+end

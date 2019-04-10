@@ -1,0 +1,24 @@
+<div class="jumbotron">
+  <div class="container-fluid">
+    <div class="row mb-3 mb-lg-0">
+      <div class="col-lg-6">
+        <h1 class="display-4"><%= VariantSearch.model_name.human %></h1>
+      </div>
+      <div class="col-lg-6 d-flex justify-content-lg-end align-items-lg-center">
+        <%= link_to VariantSearch.human_attribute_name(:history), variant_searches_path, class: 'btn btn-secondary' %>
+        <%= link_to VariantSearch.human_attribute_name(:saved_history), saved_variant_searches_path, class: 'btn btn-secondary ml-3' %>
+        <%= link_to VariantSearch.human_attribute_name(:advanced), new_variant_search_path, class: 'btn btn-secondary ml-3' %>
+      </div>
+    </div>
+    <%= simple_form_for @variant_search do |f| %>
+      <%= content_tag :h4, VariantSearch.human_attribute_name(:search_defaults).html_safe, class: "help-block" %>
+      <%= f.input :search, autofocus: true, label: false, placeholder: VariantSearch.human_attribute_name(:search_placeholder) %>
+      <%= f.input :passing, as: :hidden %>
+      <%= f.input :frequency, as: :hidden %>
+      <%= f.input :frequency_operator, as: :hidden %>
+      <%= f.input :upstream_bases, as: :hidden %>
+      <%= content_tag :h4, VariantSearch.human_attribute_name(:search_popover).html_safe, class: "help-block" %>
+      <%= f.button :submit, class: 'd-none', id: 'hidden_button' %>
+    <% end %>
+  </div>
+</div>

@@ -1,0 +1,6 @@
+<li class="nav-item dropdown">
+  <a class="nav-link dropdown-toggle" href="#" id="profileDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><%= current_user.email %></a>
+  <div class="dropdown-menu" aria-labelledby="profileDropdown">
+    <%= link_to dt('navbar.signout'), signout_path %>
+  </div>
+</li>

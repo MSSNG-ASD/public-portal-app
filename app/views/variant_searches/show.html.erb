@@ -1,0 +1,17 @@
+<div class="row">
+  <div class="col">
+    <h1><%= dt("#{controller_name}.#{action_name}.title", model: dt("#{controller_name}.#{action_name}.model"), instance: @variant_search.name) %></h1>
+  </div>
+</div>
+<%= render partial: "users/preferences_modal", locals: { user: @variant_search.user } %>
+<% if @variant_search.search.present? %>
+<%= render partial: "variants", locals: { variant_search: @variant_search } %>
+<% else %>
+<%= render partial: "variants", locals: { variant_search: @variant_search } %>
+<% end %>
+<div class="row">
+  <div class="col form-actions">
+  	<%= link_to dt('actions.edit', model: VariantSearch.model_name.human), edit_variant_search_path(@variant_search), class: 'btn btn-primary' %>
+  	<%= link_to dt("actions.destroy", model: VariantSearch.model_name.human), variant_search_path(@variant_search), class: 'btn btn-danger', method: :delete, data: { confirm: dt("#{controller_name}.#{action_name}.confirm", model: @variant_search.name) } %>
+</div>
+</div>

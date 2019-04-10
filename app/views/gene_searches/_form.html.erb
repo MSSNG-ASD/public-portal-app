@@ -1,0 +1,27 @@
+<%= simple_form_for @gene_search do |f| %>
+  <div class="form-inputs">
+    <%= f.input :name, placeholder: f.object.class.human_attribute_name(:name), autofocus: true %>
+    <div class="card">
+      <div class="card-header">
+        <h3 class="card-title">by Symbol(s)</h3>
+      </div>
+      <div class="card-body">
+        <%= f.input :stringy_gene_ids, input_html: {class: 'ajax-multi-select2', data: {records: f.object.genes, url: gene_selections_path, multiple: true, minimum: 3, placeholder: f.object.class.human_attribute_name(:gene_ids_placeholder)}} %>
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-header">
+        <h3 class="card-title">by Attribute(s)</h3>
+      </div>
+      <div class="card-body">
+        <%= f.input :stringy_hpo_ids, input_html: {class: 'ajax-multi-select2', data: { records: f.object.phenotypes, url: phenotype_selections_path, multiple: true, minimum: 3, placeholder: f.object.class.human_attribute_name(:hpo_ids_placeholder) }} %>
+        <%= f.input :stringy_mim_ids, input_html: {class: 'ajax-multi-select2', data: { records: f.object.mims, url: mim_selections_path, multiple: true, minimum: 3, placeholder: f.object.class.human_attribute_name(:mim_ids_placeholder) }} %>
+        <%= f.input :inheritances, collection: Condition.pluck('inheritance').uniq.map {|i| [i, i.parameterize.underscore.to_sym]}, :input_html => {class: 'select2', multiple: "multiple", data: { placeholder: f.object.class.human_attribute_name(:inheritances)}} %>
+      </div>
+    </div>
+  </div>
+  <div class="form-actions">
+    <%= link_to dt('actions.cancel'), search_gene_searches_path, :class => 'btn btn-secondary' %>
+    <%= f.button :submit, class: 'btn btn-primary', value: dt("#{controller_name}.#{action_name}.submit", model: dt("#{controller_name}.#{action_name}.model")) %>
+  </div>
+<% end %>

@@ -1,0 +1,13 @@
+<div class="row">
+  <div class="col">
+    <h1><%= dt("#{controller_name}.#{action_name}.title", :model => dt("#{controller_name}.#{action_name}.model"), :instance => @trio.name) %></h1>
+  </div>
+</div>
+<%= render :partial => "users/preferences_modal", :locals => { :user => @trio.user } %>
+<%= render :partial => "variants", :locals => { :trio => @trio } %>
+<div class="row">
+  <div class="col form-actions">
+		<%= link_to dt('actions.edit', :model => Trio.model_name.human), edit_trio_path(@trio), :class => 'btn btn-primary' %>
+		<%= link_to dt("actions.destroy", :model => Trio.model_name.human), trio_path(@trio), :class => 'btn btn-danger', :method => :delete, :data => { :confirm => dt("#{controller_name}.#{action_name}.confirm", :model => @trio.name) } %>
+  </div>
+</div>

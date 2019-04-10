@@ -1,0 +1,161 @@
+<%= render partial: "sql_modal", locals: { sql: h(trio.sql).gsub("\n", "<br>").html_safe } %>
+<div class="row">
+  <div class="col-12 col-md-5">
+    <dl class="row align-items-center">
+      <dt class="col-6 col-sm-3 col-md-6 text-right"><%= Trio.human_attribute_name(:passing) %></dt>
+      <dd class="col-6 col-sm-3 col-md-6 mb-0"><%= trio.passing.eql?("1") ? "Passing" : "All" %></dd>
+      <dt class="col-6 col-sm-3 col-md-6 text-right"><%= Trio.human_attribute_name(:index_ids) %></dt>
+      <dd class="col-6 col-sm-3 col-md-6 mb-0"><%= trio.index_ids.join(", ") %></dd>
+      <dt class="col-6 col-sm-3 col-md-6 text-right"><%= Trio.human_attribute_name(:frequency) %></dt>
+      <dd class="col-6 col-sm-3 col-md-6 mb-0"><%= trio.frequency_operator %> <%= trio.frequency %></dd>
+      <% if trio.impacts.present? %>
+      <dt class="col-6 col-sm-3 col-md-6 text-right"><%= Trio.human_attribute_name(:impacts) %></dt>
+      <dd class="col-6 col-sm-3 col-md-6 mb-0"><%= trio.impacts.reject {|item| item.blank? }.map {|item| Trio::IMPACTS[item.to_sym]}.join(", ") %></dd>
+      <% end %>
+      <dt class="col-6 col-sm-3 col-md-6 text-right"><%= Trio.human_attribute_name(:sql) %></dt>
+      <dd class="col-6 col-sm-3 col-md-6 mb-0">
+        <%= link_to "Show", "#", :data => {:placement => "top", :toggle => "modal", :target => '#sql-modal'}, :class => 'btn btn-default btn-xs' %>
+      </dd>
+    </dl>
+  </div>
+  <div class="col-12 col-md-7">
+    <%= simple_form_for trio do |f| %>
+      <%= f.input :name, label: Trio.human_attribute_name(:saved_name), :autofocus => true %>
+      <%= f.input :saved, as: :hidden, input_html: { :value => true } %>
+      <%= f.button :submit, :class => 'btn btn-primary', :value => dt("#{controller_name}.#{action_name}.submit", :model => dt("#{controller_name}.#{action_name}.model")) %>
+    <% end %>
+
+    <div class="row mt-2">
+      <div class="col-sm-4">
+        <%= link_to "Download #{trio.name.parameterize(separator: "_")}.txt", trio_path(trio, format: :text) %>
+      </div>
+      <div class="col-sm-4">
+        <%= link_to "Download #{trio.name.parameterize(separator: "_")}.xlsx", trio_path(trio, format: :xlsx) %>
+      </div>
+      <div class="col-sm-4">
+        <%= link_to "Visible Columns", "#", :data => {:placement => "top", :toggle => "modal", :target => '#preferences-modal'} %>
+      </div>
+    </div>
+    <div class="row mt-2">
+      <div class="col">
+        <b>
+          <% if trio.variants.count > 500 %>
+            <%= dt("notices.trio_limited", count: trio.variants.first.results_count) %>
+            <%= link_to "#{trio.name.parameterize(separator: "_")}.xlsx", trio_path(trio, format: :xlsx) %>
+          <% else %>
+            <%= dt("notices.unlimited", count: trio.variants.count) %>
+          <% end %>
+        </b>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="row">
+  <table id="datatable_with_item_options" class="table table-striped table-bordered variant-table">
+    <thead>
+      <!--------------------
+        Render the headers
+      ---------------------->
+      <tr>
+        <!-----
+          Links
+        ------->
+        <!-- This is left blank by design -->
+        <th></th>
+        <!----------------
+          Dynamic Columns
+        ------------------>
+        <% trio.user.selected_preferences.each do |column| %>
+          <% if !['annotation_id', 'igv'].include?(column) %>
+            <th><%= AnnotatedVariant.human_attribute_name(column.to_sym) %></th>
+          <% end %>
+        <% end %>
+      </tr>
+    </thead>
+    <tbody>
+      <!--------------------
+        Render the result
+      ---------------------->
+      <% trio.variants.take(5000).each do |variant| %>
+        <tr>
+          <!-----
+            Links
+          ------->
+          <td>
+            <%= render partial: 'layouts/search_item_options', locals: {variant: variant} %>
+          </td>
+          <!----------------
+            Dynamic Columns
+          ------------------>
+          <% trio.user.selected_preferences.each do |column| %>
+            <% if column.eql?('sample_id') %>
+            <td data-column="sample_id">
+              <% if variant.phenotyped %>
+                <%= link_to variant.sample_id, subject_sample_path(variant.sample_id) %>
+              <% else %>
+                <%= variant.sample_id %>
+              <% end %>
+            </td>
+            <% elsif column.eql?('affection') %>
+                <td><%= variant.interpretted_affection %></td>
+            <% elsif column.eql?('category') %>
+                <td><%= Trio.human_attribute_name(variant.category) %></td>
+            <% elsif column.eql?('prioritizations') %>
+              <% if trio.symbols.include?(variant.gene_symbol) %>
+                <td><%= variant.prioritizations.map {|p| Trio.human_attribute_name(p)}.join(", ") %></td>
+              <% else %>
+                <td><%= (variant.prioritizations - [:het_risk]).map {|p| Trio.human_attribute_name(p)}.join(", ") %></td>
+              <% end %>
+            <% elsif column.eql?('reference_bases') %>
+              <td>
+                <%= shorten(variant.reference_bases) %>
+              </td>
+            <% elsif column.eql?('alternate_bases') %>
+              <td>
+                <%= shorten(variant.alternate_bases) %>
+              </td>
+            <% elsif column.eql?('letter_genotype') %>
+              <td><%= variant.letter_genotype.split(",").map {|g| shorten(g)}.join(",") %></td>
+            <% elsif column.eql?('annotation_id') %>
+              <!-- Moved to Search Item Options -->
+              <!--
+              <td><%= link_to shorten(variant.annotation_id, 30), annotation_path(variant.annotation_id.strip) %></td>
+              -->
+            <% elsif column.eql?('refseq_id') %>
+              <% if variant.refseq_id.present? && variant.refseq_id.split(":").present? %>
+              <td><%= "#{variant.refseq_id.split(":")[0...3].join(":")}..." %></td>
+              <% else %>
+              <td><%= variant.refseq_id %></td>
+              <% end %>
+            <% elsif column.eql?('igv') %>
+              <!--
+              <td>
+              <%= link_to content_tag(:span, "", :class => "fa fa-file-image-o", :id => "igv-#{variant.sample_id}"), igv_subject_sample_path(variant.sample_id, locus: "#{variant.reference_name}:#{variant.start.to_i - 25}-#{variant.end.to_i + 25}", call_set_id: variant.call_call_set_id), :class => 'btn btn-small btn-primary btn-xs' %>
+              </td>
+              -->
+              <!-- Moved to Search Item Options -->
+            <% elsif column.eql?('inheritance') %>
+              <td><%= interpretted_inheritance(variant.reference_name, variant.sex, variant.inheritance) %></td>
+            <% elsif column.eql?('affection') %>
+              <td><%= variant.affection %></td>
+            <% elsif column.eql?('dbsnp') %>
+              <% if variant.dbsnp.present? %>
+              <td><%= link_to_dbsnp(variant.dbsnp) %></td>
+              <% else %>
+              <td><%= variant.dbsnp %></td>
+              <% end %>
+            <% elsif ['reference_name', 'start', 'end'].include? column.to_s %>
+              <td>
+                <%= variant.send(column.to_sym) %>
+              </td>
+            <% else %>
+              <td><%= variant.send(column.to_sym) %></td>
+            <% end %>
+          <% end %>
+        </tr>
+      <% end %>
+    </tbody>
+  </table>
+</div>
+

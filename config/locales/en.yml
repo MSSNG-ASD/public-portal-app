@@ -1,0 +1,1004 @@
+# Files in the config/locales directory are used for internationalization
+# and are automatically loaded by Rails. If you want to use locales other
+# than English, add the necessary files in this directory.
+#
+# To use the locales, use `I18n.t`:
+#
+#     I18n.t 'hello'
+#
+# In views, this is aliased to just `t`:
+#
+#     <%= t('hello') %>
+#
+# To use a different locale, set it with `I18n.locale`:
+#
+#     I18n.locale = :es
+#
+# This would use the information in config/locales/es.yml.
+#
+# To learn more, please read the Rails Internationalization guide
+# available at http://guides.rubyonrails.org/i18n.html.
+
+en:
+  time:
+    formats:
+      default: '%Y-%m-%d %I:%M %P'
+  activerecord:
+    errors:
+      models:
+        read_search:
+          attributes:
+            gene_id:
+              blank: must provide Gene or Genomic Interval
+              gene_xor_location: "specify a Gene or Genomic Interval, not both"
+            chromosome:
+              blank: must provide Gene or Genomic Interval
+              gene_xor_location: "specify a Gene or Genomic Interval, not both"
+        subject_sample_search:
+          attributes:
+            submitted_ids:
+              blank: must specify a Subject or Sample
+              subject_or_sample: "specify a Subject or Sample"
+            index_ids:
+              blank: must specify a Subject or Sample
+              subject_or_sample: "specify a Subject or Sample"
+        variant_search:
+          attributes:
+            variant:
+              blank: must constrain to a region by some method
+              xor_region: "must constrain to a region by a single method"
+              region_present: "must constrain to a region by some method"
+            chromosome:
+              blank: must constrain to a region by some method
+              xor_region: "must constrain to a region by a single method"
+              region_present: "must constrain to a region by some method"
+            gene_id:
+              blank: must constrain to a region by some method
+              xor_region: "must constrain to a region by a single method"
+              region_present: "must constrain to a region by some method"
+            dbsnp:
+              blank: must constrain to a region by some method
+              xor_region: "must constrain to a region by a single method"
+              region_present: "must constrain to a region by some method"
+            uploaded_bed_file:
+              blank: must constrain to a region by some method
+              xor_region: "must constrain to a region by a single method"
+              region_present: "must constrain to a region by some method"
+              valid_bed_file: 'lines must match /^(?i)(chr)*(\d+|M|X|Y)\s+(\d+)\s+(\d+)/'
+            uploaded_gene_file:
+              blank: must constrain to a region by some method
+              xor_region: "must constrain to a region by a single method"
+              region_present: "must constrain to a region by some method"
+              valid_gene_file: 'lines must match /^[a-zA-Z0-9_.-]*/'
+            uploaded_plink_file:
+              blank: must constrain to a region by some method
+              xor_region: "must constrain to a region by a single method"
+              region_present: "must constrain to a region by some method"
+            submitted_ids:
+              blank: must provide Sample or Subject
+              sample_xor_subject: "specify a Sample or Subject, not both"
+              valid_gene: "variants by Gene require Sample or Subject"
+            index_ids:
+              blank: must provide Sample or Subject
+              sample_xor_subject: "specify a Sample or Subject, not both"
+              valid_gene: "variants by Gene require Sample or Subject"
+        trio:
+          attributes:
+            index_ids:
+              blank: must provide a Subject
+        gene_set:
+          attributes:
+            gene_ids:
+              blank: must provide Format or Genomic Interval
+              xor_upload: "specify a Format or Genomic Interval, not both"
+            uploaded_gene_set:
+              blank: must provide Format or Genomic Interval
+              xor_upload: "specify a Format or Genomic Interval, not both"
+            uploaded_gene_set_file:
+              blank: must provide Format or Genomic Interval
+              xor_upload: "specify a Format or Genomic Interval, not both"
+    models:
+      user:
+        one: &user User
+        other: &users Users
+      depth:
+        one: &read Read
+        other: &reads Read Depth
+      read_search:
+        one: &read_search Read Depth Query
+        other: &read_searches Read Depth Queries
+      variant:
+        one: &variant Variant
+        other: &variants Variants
+      annotated_variant:
+        one: &annotated_variant Variant
+        other: &annotated_variants Variants
+      variant_search:
+        one: &variant_search Variant Query
+        other: &variant_searches Variants
+      annotation:
+        one: &annotation Annotation
+        other: &annotations Annotations
+      gene:
+        one: &gene Gene
+        other: &genes Gene Info
+      gene_search:
+        one: &gene_search Gene Query
+        other: &gene_searches Gene Info
+      gene_set:
+        one: &gene_set Gene List
+        other: &gene_sets Gene Lists
+      trio:
+        one: &trio Trio Query
+        other: &trios Trios
+      subject:
+        one: &subject Subject
+        other: &subjects Subjects
+      subject_sample:
+        one: &subject_sample Subject Sample
+        other: &subject_samples Subject Info
+      subject_sample_search:
+        one: &subject_sample_search Subject Query
+        other: &subject_sample_searches Subject Info
+      subject_measure:
+        one: &subject_measure Subject Measure
+        other: &subject_measures Subject Measures
+    attributes:
+      user:
+        name: Name
+        read_searches: Read Queries
+        variant_searches: Variant Queries
+        gene_searches: Gene Queries
+        gene_sets: Gene Lists
+        trios: Trio Queries
+      depth:
+        word: Word
+        word_count: Count
+        corpus: Work
+        corpus_date: Year
+        popover: "Read Depth at Genomic Interval"
+      read_search:
+        name: *read_search
+        search_placeholder: One Box Query
+        search_popover: "Query Read Depth for a specific variant: 2-50724000-50725000<br />Query Read Depth for a specific gene, : NRXN1"
+        history: Query History
+        saved_history: Saved Queries
+        saved_name: Read Query Name
+        gene_id: Symbol
+        stringy_gene_ids: Symbol
+        gene_id_placeholder: e.g. SHANK1
+        chromosome: Chromosome
+        start_position: Start Position
+        end_position: End Position
+        f_chromosome: Chromosome
+        f_start_position: Start Position
+        f_end_position: End Position
+        index_ids: Subject(s)
+        submitted_ids: Sample(s)
+        index_ids_placeholder: INDEXID(s)
+        submitted_ids_placeholder: SUBMITTEDID(s)
+        dna_source: DNA Source
+        platform: Platform
+        gender: Gender
+        search: Query
+        mapping_quality: Mapping Quality
+        sql: SQL
+        advanced: Advanced Query
+        destroy_all: Delete All
+      variant_search:
+        name: *variant_search
+        search: *variant_search
+        search_placeholder: One Box Query
+        search_defaults: |
+          Defaults: Quality Variants = true, Control Database Frequency <= 0.01, Affection = affected, Damage Potential = High
+          <br />Use the Advanced Query for alternative query parameters
+          <br />Coordinates are 0-based, using the hg19 reference
+        search_popover: |
+          <table>
+            <thead>
+              <tr>
+                <th>Description</th>
+                <th>Example</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>Query for a specific variant in all subjects:</td>
+                <td>2-50724816-50724817-G-A</td>
+              </tr>
+              <tr>
+                <td>Query for all variants within a specific genomic interval (or position), in all subjects:</td>
+                <td>2-50724816-50724817</td>
+              </tr>
+              <tr>
+                <td>Query for all rare high-impact variants within a specific gene, in all subjects:</td>
+                <td>NRXN1</td></tr>
+              <tr>
+                <td>Query for all rare high-impact variants within a specific gene, in a specific subject:</td>
+                <td>NRXN1;9-9999-001</td></tr>
+              <tr>
+                <td>Query for all rare high-impact variants within two genes, in all subjects:</td>
+                <td>NRXN1;NRXN3</td></tr>
+              <tr>
+                <td>Query for a specific cDNA change within a gene, in all subjects:</td>
+                <td>NRXN1:c.C2653T</td></tr>
+              <tr>
+                <td>Query for any variant modifying a specific cDNA position within a gene, in all subjects:</td>
+                <td>NRXN1:c.2653</td></tr>
+              <tr>
+                <td>Query for a specific amino acid change within a gene, in all subjects:</td>
+                <td>NRXN1:p.H885Y</td></tr>
+              <tr>
+                <td style="padding-right: 15px;">Query for any variant modifying a specific amino acid position within a gene, in all subjects:</td>
+                <td>NRXN1:p.885</td></tr>
+              <tr>
+                <td>Query for a specific dbSNP ID in all subjects:</td>
+                <td>rs199784139</td>
+              </tr>
+            </tbody>
+          </table>
+        history: Query History
+        saved_history: Saved Queries
+        saved_name: Variant Query Name
+        denovo: De Novo
+        variant: *variant
+        variant_placeholder: chr-start-end-ref-alt
+        variant_hint: "Example: 2-50724816-50724817-G-A"
+        dbsnp_placeholder: dbSNP ID
+        dbsnp_hint: "e.g. rs199784139"
+        chromosome: Chromosome
+        start_position: Start Position
+        end_position: End Position
+        upstream_bases: Upstream Bases
+        ucsc: UCSC
+        dgv: DGV
+        dbsnp: dbSNP ID
+        affection: Affection
+        RELATION: Relation
+        reference_allele: Reference Allele
+        alternate_allele: Alternate Allele
+        gene_id: Symbol
+        stringy_gene_ids: Symbol(s)
+        gene_ids_placeholder: e.g. SHANK1
+        index_ids: Subject(s)
+        stringy_index_ids: Subject(s)
+        index_ids_placeholder: e.g. 9-9999-001
+        submitted_ids: Sample(s)
+        stringy_submitted_ids: Sample(s)
+        submitted_ids_placeholder: e.g. 9-9999-001
+        dna_source: DNA Source
+        platform: Platform
+        gender: Gender
+        passing: Quality Variants
+        frequency: Control Database Frequency
+        frequency_operator: Frequency Operator
+        role: Relation
+        zygosity: Zygosity
+        coding: Coding
+        simple_effects: Effect On Gene Product
+        effects: Effect On Gene Product
+        effects_with_impacts: 'Effect - Impact'
+        effects_placeholder: Click to select Effects
+        impacts: Damage Potential
+        impacts_placeholder: Click to select Impacts
+        paths: Pathogenicity
+        paths_placeholder: Click to select Pathogenicity
+        variant_title: Select Genomic Interval
+        accordion_format_title: by 0-based UCSC-like formatted string
+        accordion_dbsnp_title: by dbSNP ID
+        accordion_location_title: by Genomic Coordinate
+        accordion_file_title: by File
+        accordion_gene_title: by Gene
+        accordion_sample_title: by Sample(s)
+        accordion_subject_title: by Subject(s)
+        uploaded_bed_file: BED File
+        uploaded_gene_file: Upload Gene Symbol File
+        uploaded_sample_file: Upload Sample File
+        uploaded_subject_file: Upload Subject File
+        uploaded_plink_file: PLINK MAP File
+        filter_title: Optional Filters
+        accordion_significance_title: by Variant Annotation
+        advanced: Advanced Query
+        destroy_all: Delete All
+        popover: "Variants at Genomic Interval"
+      gene:
+        gene_id: Entrez Gene ID
+        symbol: Gene Symbol
+        chromosome: Chromosome
+        start_position: Start Position
+        end_position: End Position
+        map_location: Map Location
+        synonyms: Synonyms
+        description: Description
+        type_of_gene: Type
+        dbXrefs: Cross References
+        locusTag: Locus Tag
+        condition: Condition
+        inheritance: Inheritance
+        age_group: Age Group
+        allelic_conditions: Allelic Conditions
+        manifestation_categories: Manifestation Categories
+        intervention_categories: Intervention Categories
+        intervention_rationale: Intervention Rationale
+        comments: Comments
+        references: References
+        disease_id: Disease
+        hpo_id: HPO ID
+        gene_term: HPO Name
+        disorder: Disorder
+        mim_type: MIM Type
+        mim_phenotype: MIM Phenotype
+        go_id: GO ID
+        go_term: GO Term
+        category: Category
+        evidence: Evidence
+        qualifier: Qualifier
+        rna_accession: RNA Accession
+        protein_accession: Protein Accession
+        genome_accession: Genome Accession
+        popover: "Gene Information"
+      gene_search:
+        name: *gene_search
+        search_placeholder: One Box Query
+        search_popover: "Query for gene(s) by symbol. e.g. NRXN1"
+        history: Query History
+        saved_history: Saved Queries
+        saved_name: Gene Query Name
+        gene_ids: Symbol(s)
+        stringy_gene_ids: Symbol(s)
+        gene_ids_placeholder: e.g. NRXN1
+        gene_id: Entrez Gene ID
+        go_ids: GO Term(s)
+        stringy_go_ids: GO Term(s)
+        go_ids_placeholder: e.g. cell
+        hpo_ids: HPO Term(s)
+        stringy_hpo_ids: HPO Term(s)
+        hpo_ids_placeholder: e.g. onset
+        mim_ids: OMIM ID(s)
+        stringy_mim_ids: OMIM ID(s)
+        mim_ids_placeholder: e.g. 100070
+        inheritances: CGD Inheritance(s)
+        advanced: Advanced Query
+        destroy_all: Delete All
+        popover: "Gene Information"
+      gene_set:
+        name: *gene_set
+        description: Description
+        pubmed_ids: Reference(s)
+        stringy_pubmed_ids: Reference(s)
+        pubmed_ids_placeholder: e.g. 9873079
+        uploaded_gene_set_file: Gene Set File
+        gene_id: Symbol
+        gene_ids: Symbol(s)
+        stringy_gene_ids: Symbol(s)
+        gene_ids_placeholder: e.g. SHANK1
+        go_ids: GO Term(s)
+        stringy_go_ids: GO Term(s)
+        go_ids_placeholder: e.g. cell
+        hpo_ids: HPO Term(s)
+        stringy_hpo_ids: HPO Term(s)
+        hpo_ids_placeholder: e.g. onset
+        mim_ids: OMIM ID(s)
+        stringy_mim_ids: OMIM ID(s)
+        mim_ids_placeholder: e.g. 100070
+        inheritances: CGD Inheritance(s)
+        popover: "Lists of Genes"
+      subject_sample_search:
+        name: *subject_sample_search
+        search_placeholder: One Box Query
+        search_popover: "Query for Subjects(s) by ID e.g. 9-9999-001;9-9999-002"
+        history: Query History
+        saved_history: Saved Queries
+        saved_name: Subject Query Name
+        index_ids: Subject(s)
+        stringy_index_ids: Subject(s)
+        index_ids_placeholder: e.g. 9-9999-001
+        submitted_ids: Sample(s)
+        stringy_submitted_ids: Sample(s)
+        submitted_ids_placeholder: e.g. 9-9999-001
+        dna_source: DNA Source
+        platform: Platform
+        advanced: Advanced Query
+        destroy_all: Delete All
+        popover: "Subject/Sample Information"
+      trio:
+        name: *trio
+        index_ids: Subject ID
+        search_placeholder: One Box Query
+        search_defaults: "Defaults: Quality Variants = true, Control Database Frequency <= 0.05, Damage Potential = High or Medium<br />Use the Advanced Query for alternative query parameters<br />Coordinates are 0-based, using the hg19 reference"
+        search_popover: "Query for Trio with subject ID: 9-9999-001"
+        history: Query History
+        saved_history: Saved Queries
+        saved_name: Trio Query Name
+        destroy_all: Delete All
+        category: Category
+        prioritizations: Prioritizations
+        file_hint: 'Text file of gene symbols (one gene symbol per line)'
+        stringy_gene_ids: Symbol(s)
+        gene_ids_placeholder: e.g. SHANK1
+        stringy_index_ids: Subject ID
+        index_ids_placeholder: e.g. 9-9999-001
+        popover: "Trio Information"
+        frequency: Control Database Frequency
+        frequency_operator: Frequency Operator
+        zygosity: Zygosity
+        impacts: &impacts Damage Potential
+        impacts_placeholder: Click to select Impacts
+        effects: Effect On Gene Product
+        effects_with_impacts: 'Effect - Impact'
+        effects_placeholder: Click to select Effects
+        paths: Pathogenicity
+        paths_placeholder: Click to select Pathogenicity
+        subject_title: Select Subject
+        genes_title: Select Risk Gene(s)
+        accordion_file_title: by File
+        accordion_gene_title: by Gene Symbol(s)
+        accordion_subject_title: by Subject ID
+        uploaded_gene_file: Risk Genes File
+        filter_title: Optional Filters
+        accordion_significance_title: by Variant Annotation
+        inheritance_undetermined: inheritance-undetermined
+        de_novo: de-novo
+        inherited: inherited
+        homo_auto_rec: Homozygous autosomal recessive
+        comp_het_rec: Compound heterozygous recessive
+        het_auto_dom: Heterozygous autosomal dominant
+        het_risk: Heterozygous autism risk gene
+        het_denovo: Heterozygous de-novo
+        hemi_homo_x: Hemizygous or homozygous X-linked
+  activemodel:
+    attributes:
+      annotation:
+        id: Annotation ID
+        effects_with_impacts: 'Effect - Impact'
+        paths: Pathogenicity
+        reference_name: Chr
+        start: Start
+        end: End
+        reference_bases: Ref
+        alternate_bases: Alt
+        gene_id: Gene ID
+        typeseq: typeseq
+        refseq_id: refseq_id
+        aa_flag: aa_flag
+        effect: effect
+        leftD: leftD
+        rightD: rightD
+        gene_symbol: Gene
+        entrez_id: entrez_id
+        gene_desc: gene_desc
+        gene_type: gene_type
+        omim_id: omim_id
+        omim_phenotype: omim_phenotype
+        MPO: MPO
+        HPO: HPO
+        CGD_disease: CGD_disease
+        CGD_inheritance: CGD_inheritance
+        Gene_GI: Gene_GI
+        Gene_HI: Gene_HI
+        dbsnp: dbSNP
+        dbsnp_common: dbsnp_common
+        dbsnp_region: dbsnp_region
+        dbsnp_common_region: dbsnp_common_region
+        dbsnp_wind: dbsnp_wind
+        Clinvar_SIG: Clinvar_SIG
+        Clinvar_CLNDBN: Clinvar_CLNDBN
+        Clinvar_CLNACC: Clinvar_CLNACC
+        A1000g_all: A1000g_all
+        A1000g_eur: A1000g_eur
+        A1000g_amr: A1000g_amr
+        A1000g_eas: A1000g_eas
+        A1000g_afr: A1000g_afr
+        A1000g_sas: A1000g_sas
+        NHLBI_all: NHLBI_all
+        NHLBI_aa: NHLBI_aa
+        NHLBI_eu: NHLBI_eu
+        ExAC_Freq: ExAC_Freq
+        ExAC_AFR: ExAC_AFR
+        ExAC_AMR: ExAC_AMR
+        ExAC_EAS: ExAC_EAS
+        ExAC_FIN: ExAC_FIN
+        ExAC_NFE: ExAC_NFE
+        ExAC_OTH: ExAC_OTH
+        ExAC_SAS: ExAC_SAS
+        cg: cg
+        cg_filtered: cg_filtered
+        cgW597_AllFreq: cgW597_AllFreq
+        cgW597_CalledFreq: cgW597_CalledFreq
+        cgW597_11s: cgW597_11s
+        cgW597_Hs: cgW597_Hs
+        cgW597_Ls: cgW597_Ls
+        cg1KG436_AllFreq: cg1KG436_AllFreq
+        cg1KG436_CalledFreq: cg1KG436_CalledFreq
+        cg1KG436_11s: cg1KG436_11s
+        cg1KG436_Hs: cg1KG436_Hs
+        cg1KG436_Ls: cg1KG436_Ls
+        sift_score: sift_score
+        polyphen_score: polyphen_score
+        ma_score: ma_score
+        mt_score: mt_score
+        cosmic: cosmic
+        phylopPMam: phylopPMam
+        phylopPMam_avg: phylopPMam_avg
+        phylopVert100: phylopVert100
+        phylopVert100_avg: phylopVert100_avg
+        phastCons_placental: phastCons_placental
+        pfam_annovar: pfam_annovar
+        per_cds_affected: per_cds_affected
+        per_transcripts_affected: per_transcripts_affected
+        SegDup: SegDup
+        HGMD_Accession: HGMD_Accession
+        HGMD_type: HGMD_type
+        HGMD_tag: HGMD_tag
+        HGMD_Disease: HGMD_Disease
+        HGMD_PubmedId: HGMD_PubmedId
+        Repeat: Repeat
+        CADD_phred: CADD_phred
+        spx_dpsi: spx_dpsi
+        spx_dpsi_z: spx_dpsi_z
+        spx_gene: spx_gene
+        spx_strand: spx_strand
+        spx_transcript: spx_transcript
+        spx_exonN: spx_exonN
+        spx_seqType: spx_seqType
+        spx_effType: spx_effType
+        spx_spliceDist: spx_spliceDist
+        A1000g_freq_max: max frequency 1000 Genomes
+        ExAC_freq_max: max frequency ExAC
+        freq_max: max frequency
+        igv: Read Viewer
+        mssng_freq_max: max frequency MSSNG
+      annotated_variant:
+        sample_id: Sample
+        call_call_set_id: Call Set ID
+        reference_name: Chr
+        start: Start
+        end: End
+        reference_bases: Reference allele
+        allele1: Allele1
+        allele2: Allele2
+        alternate_bases: Alternate allele
+        annotation_id: Annotation
+        effects: Effects
+        impacts: Impacts
+        paths: Pathogenicity
+        genotype: Genotype
+        zygosity: Zygosity
+        letter_genotype: Genotype
+        de_novo: De Novo
+        sanger_validated: "Sanger Validated"
+        sanger_inheritance: Sanger Inheritance
+        affection: Affection
+        family_role: Family Relation
+        role: Relation
+        inheritance: Inheritance
+        familyid: Family ID
+        sex: Sex
+        ad: Allelic depth
+        platform: Sequencing platform
+        genotype_likelihood: Genotype likelihood
+        dbsnp: dbSNP ID
+        call_filter: Filter
+        call_dp: Read depth
+        call_gq: Genotype quality
+        call_phaseset: Phase
+        call_allele1ReadCount: allele1ReadCount
+        call_allele1VarFilter: allele1VarFilter
+        call_allele1VariantQuality: allele1VariantQuality
+        call_allele1VarScoreEaf: allele1VarScoreEaf
+        call_allele1VarScoreVaf: allele1VarScoreVaf
+        call_allele1HapLink: allele1HapLink
+        call_allele2ReadCount: allele2ReadCount
+        call_allele2VarFilter: allele2VarFilter
+        call_allele2VariantQuality: allele2VariantQuality
+        call_allele2VarScoreEaf: allele2VarScoreEaf
+        call_allele2VarScoreVaf: allele2VarScoreVaf
+        call_allele2HapLink: allele2HapLink
+        popover: "Variants at Genomic Interval"
+        effects_with_impacts: 'Effect - Impact'
+        a1000g_freq_max: max frequency 1000 Genomes
+        exac_freq_max: max frequency ExAC
+        freq_max: max frequency
+        igv: Read Viewer
+        refseq_id: RefSeq ID
+        spx_gene: SPX Gene
+        gene_symbol: Gene Symbol
+        entrez_id: Entrez Id
+        clinvar_sig: Clinvar significance
+        cgd_disease: CGD Disease
+        cgd_inheritance: CGD Inheritance
+        omim_phenotype: OMIM Phenotype
+        inherited_quality: Inherited Quality
+        comment: Comment
+        gnomad_exome_freq_max: max frequency GnomAD exome
+        gnomad_genome_freq_max: max frequency GnomAD genome
+        comp_het_rec: Compound heterozygous recessive
+        mssng_freq_max: max frequency MSSNG
+      subject:
+        indexid: Proband
+        fatherid: Father
+        motherid: Mother
+        affection: Affection
+        sex: Gender
+        familyid: Family
+        dob: DOB
+        subject_samples: *subject_samples
+        subject_measures: *subject_measures
+      subject_sample:
+        submittedid: Sample
+        indexid: Subject
+        dnasource: DNA Source
+        platform: Platform
+        readgroupsetid: READGROUPSETID
+        subject: *subject
+        relevance: Relevance
+        date: Date
+        test: Test
+        question: Question
+        legend: Legend
+        measure: Measure
+        value: Value
+        popover: "Subject/Sample Information"
+  app:
+    name: MSSNG
+    copyright: MSSNG 2017
+    help: Help
+    home: Home
+    missing: No Locale
+  help:
+    title: Help
+    notice: "There is no help for %{controller_action}."
+    message: "Create it in %{file}."
+  mail:
+    nav: "Questions/Feedback"
+    address: "help@mss.ng"
+    subject: "Questions/Feedback from MSSNG Portal"
+    body: "Dear %{email},"
+  popovers:
+    effects: '<dl><dt>Frameshift</dt><dd>Definition</dd><dt>Stop Gain</dt><dd>Definition</dd><dt>Splice Site</dt><dd>Definition</dd><dt>LOF</dt><dd>Definition</dd><dt>Missense</dt><dd>Definition</dd><dt>Other</dt><dd>Definition</dd><dt>Splicing Reg Neg</dt><dd>Definition</dd><dt>Splicing Reg Pos</dt><dd>Definition</dd><dt>UTR</dt><dd>Definition</dd><dt>Non-Coding</dt><dd>Definition</dd></dl>'
+    impacts: '<dl><dt>High</dt><dd>Definition</dd><dt>Medium</dt><dd>Definition</dd><dt>Low</dt><dd>Definition</dd></dl>'
+    paths: '<dl><dt>ClinVar Pathogenic</dt><dd>Definition</dd></dl>'
+  events:
+    create: Created
+    update: Updated
+    destroy: Destroyed
+  notices:
+    create: "%{model} was successfully created."
+    update: "%{model} was successfully updated."
+    destroy: "%{model} was successfully destroyed."
+    event: "Successfully %{event} %{model}"
+    signed_in: 'Signed in!'
+    signed_out: 'Signed out!'
+    error: "Authentication error: You do not have permission to access MSSNG data. MSSNG access agreement required."
+    limited: This query has exceeded the maximum of 500 variants, the first 500 of %{count} are being returned. For all %{count} variants, download
+    trio_limited: This query has exceeded the maximum of 500 variants, the first 500 of %{count} are being returned. For all %{count} variants, download
+    unlimited: "%{count} variants returned"
+    no_reads: No reads available. Sequencing done by Complete Genomics.
+  actions:
+    cancel: Cancel
+    done: Done
+    destroy: "Delete %{model}"
+    download: "Download %{model}"
+    edit: "Edit %{model}"
+    back: "Back"
+    new: "New %{model}"
+    checkout: Checkout
+    add: "Add %{model}"
+    confirm: Are you sure?
+    submit: Submit
+    save: Save
+    update: Update
+    reset: Reset Columns
+  navbar:
+    profile: Account
+    signout: Sign Out
+    signin: Sign In
+    preferences: Column Preferences
+    back: Back
+    sql: BigQuery SQL
+  database:
+    gene: Entrez
+    ref_seq: RefSeq Gene
+    omim: OMIM
+    condition: Clinical Genomics Database
+    phenotype: Human Phenotype Ontology
+    go: GO
+  users:
+    default: &user_default
+      title: "%{model}: %{instance}"
+      model: *user
+      confirm: Are you sure?
+    default_create: &user_default_create
+      <<: *user_default
+      title: "New %{model}"
+      submit: "Create %{model}"
+    default_update: &user_default_update
+      <<: *user_default
+      title: "Editing %{model}: %{instance}"
+      submit: "Update %{model}"
+    index:
+      <<: *user_default
+      title: "%{model}"
+      model: *users
+    show: *user_default
+    destroy: *user_default
+    new: *user_default_create
+    create: *user_default_create
+    edit: *user_default_update
+    update: *user_default_update
+  read_searches:
+    default: &read_search_default
+      title: "%{model}: %{instance}"
+      model: *read_search
+      confirm: "This will delete '%{model}' and cannot be undone."
+    default_create: &read_search_default_create
+      <<: *read_search_default
+      title: "New %{model}"
+      submit: "%{model}"
+    default_update: &read_search_default_update
+      <<: *read_search_default
+      title: "Editing %{model}: %{instance}"
+      submit: "Update %{model}"
+    index:
+      <<: *read_search_default
+      title: "%{model} History"
+      model: *read_searches
+      confirm: "This will delete your query history and cannot be undone."
+    saved:
+      <<: *read_search_default
+      title: "Saved %{model}"
+      model: *read_searches
+      confirm: "This will delete the selected saved queries and cannot be undone."
+      submit: "Delete Selected"
+    show:
+      <<: *read_search_default
+      submit: Save Read Query
+    destroy: *read_search_default
+    new: *read_search_default_create
+    create: *read_search_default_create
+    edit: *read_search_default_update
+    update: *read_search_default_update
+  variant_searches:
+    default: &variant_search_default
+      title: "%{model}: %{instance}"
+      model: *variant_search
+      confirm: "This will delete '%{model}' and cannot be undone."
+    default_create: &variant_search_default_create
+      <<: *variant_search_default
+      title: "New %{model}"
+      submit: "%{model}"
+    default_update: &variant_search_default_update
+      <<: *variant_search_default
+      title: "Editing %{model}: %{instance}"
+      submit: "Update %{model}"
+    index:
+      <<: *variant_search_default
+      title: "%{model} History"
+      model: *variant_searches
+      confirm: "This will delete your query history and cannot be undone."
+    saved:
+      <<: *variant_search_default
+      title: "Saved %{model}"
+      model: *variant_searches
+      confirm: "This will delete the selected saved queries and cannot be undone."
+      submit: "Delete Selected"
+    show:
+      <<: *variant_search_default
+      submit: Save Variant Query
+    destroy: *variant_search_default
+    new: *variant_search_default_create
+    create: *variant_search_default_create
+    edit: *variant_search_default_update
+    update: *variant_search_default_update
+  annotations:
+    default: &annotation_default
+      title: "%{model}: %{instance}"
+      model: *annotation
+      confirm: "This will delete '%{model}' and cannot be undone."
+    default_create: &annotation_default_create
+      <<: *annotation_default
+      title: "New %{model}"
+      submit: "%{model}"
+    default_update: &annotation_default_update
+      <<: *annotation_default
+      title: "Editing %{model}: %{instance}"
+      submit: "Update %{model}"
+    index:
+      <<: *annotation_default
+      title: "%{model}"
+      model: *annotations
+    show: *annotation_default
+    destroy: *annotation_default
+    new: *annotation_default_create
+    create: *annotation_default_create
+    edit: *annotation_default_update
+    update: *annotation_default_update
+  gene_searches:
+    default: &gene_search_default
+      title: "%{model}: %{instance}"
+      model: *gene_search
+      confirm: "This will delete '%{model}' and cannot be undone."
+    default_create: &gene_search_default_create
+      <<: *gene_search_default
+      title: "New %{model}"
+      submit: "%{model}"
+    default_update: &gene_search_default_update
+      <<: *gene_search_default
+      title: "Editing %{model}: %{instance}"
+      submit: "Update %{model}"
+    index:
+      <<: *gene_search_default
+      title: "%{model} History"
+      model: *gene_searches
+      confirm: "This will delete your query history and cannot be undone."
+    saved:
+      <<: *gene_search_default
+      title: "Saved %{model}"
+      model: *gene_searches
+      confirm: "This will delete the selected saved queries and cannot be undone."
+      submit: "Delete Selected"
+    show:
+      <<: *gene_search_default
+      submit: Save Gene Query
+    destroy: *gene_search_default
+    new: *gene_search_default_create
+    create: *gene_search_default_create
+    edit: *gene_search_default_update
+    update: *gene_search_default_update
+  genes:
+    default: &gene_default
+      title: "%{model}: %{instance}"
+      model: *gene
+      confirm: "This will delete '%{model}' and cannot be undone."
+    default_create: &gene_default_create
+      <<: *gene_default
+      title: "New %{model}"
+      submit: "%{model}"
+    default_update: &gene_default_update
+      <<: *gene_default
+      title: "Editing %{model}: %{instance}"
+      submit: "Update %{model}"
+    index:
+      <<: *gene_default
+      title: "%{model}"
+      model: *genes
+    show: *gene_default
+    destroy: *gene_default
+    new: *gene_default_create
+    create: *gene_default_create
+    edit: *gene_default_update
+    update: *gene_default_update
+  gene_sets:
+    default: &gene_set_default
+      title: "%{model}: %{instance}"
+      model: *gene_set
+      confirm: "This will delete '%{model}' and cannot be undone."
+    default_create: &gene_set_default_create
+      <<: *gene_set_default
+      title: "New %{model}"
+      submit: "%{model}"
+    default_update: &gene_set_default_update
+      <<: *gene_set_default
+      title: "Editing %{model}: %{instance}"
+      submit: "Update %{model}"
+    index:
+      <<: *gene_set_default
+      title: "%{model}"
+      model: *gene_sets
+    show: *gene_set_default
+    destroy: *gene_set_default
+    new: *gene_set_default_create
+    create: *gene_set_default_create
+    edit: *gene_set_default_update
+    update: *gene_set_default_update
+  trios:
+    default: &trio_default
+      title: "%{model}: %{instance}"
+      model: *trio
+      confirm: "This will delete '%{model}' and cannot be undone."
+    default_create: &trio_default_create
+      <<: *trio_default
+      title: "New %{model}"
+      submit: "%{model}"
+    default_update: &trio_default_update
+      <<: *trio_default
+      title: "Editing %{model}: %{instance}"
+      submit: "Update %{model}"
+    index:
+      <<: *trio_default
+      title: "%{model} History"
+      model: *trios
+      confirm: "This will delete your query history and cannot be undone."
+    saved:
+      <<: *trio_default
+      title: "Saved %{model}"
+      model: *trios
+      confirm: "This will delete the selected saved queries and cannot be undone."
+      submit: "Delete Selected"
+    show:
+      <<: *trio_default
+      submit: Save Trio Query
+    destroy: *trio_default
+    new: *trio_default_create
+    create: *trio_default_create
+    edit: *trio_default_update
+    update: *trio_default_update
+  probands:
+    default: &proband_default
+      title: "%{model}: %{instance}"
+      model: *subject
+      confirm: "This will delete '%{model}' and cannot be undone."
+    default_create: &proband_default_create
+      <<: *proband_default
+      title: "New %{model} Query"
+      submit: "Query %{model}"
+    default_update: &proband_default_update
+      <<: *proband_default
+      title: "Editing %{model}: %{instance}"
+      submit: "Update %{model}"
+    index:
+      <<: *proband_default
+      title: "%{model}"
+      model: *subjects
+    show: *proband_default
+    destroy: *proband_default
+    new: *proband_default_create
+    create: *proband_default_create
+    edit: *proband_default_update
+    update: *proband_default_update
+  subject_samples:
+    default: &subject_sample_default
+      title: "%{model}: %{instance}"
+      model: *subject_sample
+      confirm: "This will delete '%{model}' and cannot be undone."
+    default_create: &subject_sample_default_create
+      <<: *subject_sample_default
+      title: "New %{model} Query"
+      submit: "Query %{model}"
+    default_update: &subject_sample_default_update
+      <<: *subject_sample_default
+      title: "Editing %{model}: %{instance}"
+      submit: "Update %{model}"
+    index:
+      <<: *subject_sample_default
+      title: "%{model}"
+      model: *subject_samples
+    show: *subject_sample_default
+    igv: *subject_sample_default
+    destroy: *subject_sample_default
+    new: *subject_sample_default_create
+    create: *subject_sample_default_create
+    edit: *subject_sample_default_update
+    update: *subject_sample_default_update
+  subject_sample_searches:
+    default: &subject_sample_search_default
+      title: "%{model}: %{instance}"
+      model: *subject_sample_search
+      confirm: "This will delete '%{model}' and cannot be undone."
+    default_create: &subject_sample_search_default_create
+      <<: *subject_sample_search_default
+      title: "New %{model}"
+      submit: "%{model}"
+    default_update: &subject_sample_search_default_update
+      <<: *subject_sample_search_default
+      title: "Editing %{model}: %{instance}"
+      submit: "Update %{model}"
+    index:
+      <<: *subject_sample_search_default
+      title: "%{model} History"
+      model: *subject_sample_searches
+      confirm: "This will delete your query history and cannot be undone."
+    saved:
+      <<: *subject_sample_search_default
+      title: "Saved %{model}"
+      model: *subject_sample_searches
+      confirm: "This will delete the selected saved queries and cannot be undone."
+      submit: "Delete Selected"
+    show:
+      <<: *subject_sample_search_default
+      submit: Save Subject Query
+    destroy: *subject_sample_search_default
+    new: *subject_sample_search_default_create
+    create: *subject_sample_search_default_create
+    edit: *subject_sample_search_default_update
+    update: *subject_sample_search_default_update

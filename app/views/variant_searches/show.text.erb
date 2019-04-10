@@ -1,0 +1,15 @@
+<%= [
+AnnotatedVariant.human_attribute_name(:familyid),
+AnnotatedVariant.human_attribute_name(:sample_id),
+AnnotatedVariant.human_attribute_name(:fatherid),
+AnnotatedVariant.human_attribute_name(:motherid),
+AnnotatedVariant.human_attribute_name(:sex),
+AnnotatedVariant.human_attribute_name(:affection),
+AnnotatedVariant.human_attribute_name(:reference_name),
+AnnotatedVariant.human_attribute_name(:start),
+AnnotatedVariant.human_attribute_name(:end),
+AnnotatedVariant.human_attribute_name(:reference_bases),
+AnnotatedVariant.human_attribute_name(:allele1),
+AnnotatedVariant.human_attribute_name(:allele2),
+].join("\t") %>
+<%= render partial: "variants", locals: { :variant_search => @variant_search } -%>

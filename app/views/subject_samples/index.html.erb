@@ -1,0 +1,7 @@
+<div class="row">
+  <div class="col">
+    <h1><%= dt("#{controller_name}.#{action_name}.title", :model => dt("#{controller_name}.#{action_name}.model")) %></h1>
+  </div>
+</div>
+<%= render :partial => "subject_samples", :locals => { :subject_samples => @subject_samples } %>
+

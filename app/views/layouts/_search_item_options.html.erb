@@ -1,0 +1,31 @@
+<div class="dropdown search-item-options">
+  <button class="btn dropdown-toggle" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"
+          title="More options for this sample (<%= variant.sample_id %>)">
+    <%= content_tag(:span, "", :class => "fa fa-align-justify to-show") %>
+    <%= content_tag(:span, "", :class => "fa fa-caret-up to-hide") %>
+  </button>
+  <div class="dropdown-menu">
+    <a class="dropdown-item" href="<%= annotation_path(variant.annotation_id.strip) %>">
+      See the annotation <span class="badge badge-secondary"><%= shorten(variant.annotation_id.strip, 30) %></span>
+    </a>
+    <%= link_to(
+      'Open in the Read Viewer',
+      igv_subject_sample_path(
+        variant.sample_id,
+        locus: "#{variant.reference_name}:#{variant.start.to_i - 25}-#{variant.end.to_i + 25}",
+        call_set_id: variant.call_call_set_id,
+        platform: variant.platform
+      ),
+      :class => 'dropdown-item',
+      :style => 'border-top: 1px solid #eee'
+    ) %>
+    <% if variant.searchable_on_beacon_network %>
+      <a href="<%= variant.beacon_network_url %>" class="dropdown-item" style="border-top: 1px solid #eee" target="_blank">
+        Search for similar variants on the Beacon Network*
+        <span style="display: block; font-size: 0.8rem; color: #666">
+        Beacon Network is using the 1-based coordinate counting system.
+        </span>
+      </a>
+    <% end %>
+  </div>
+</div>

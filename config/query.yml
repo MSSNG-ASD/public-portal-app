@@ -1,0 +1,337 @@
+default: &default
+  ## Secret values encrypted within secrets.yml.enc by secrets.yml.key
+  ## Edit with: EDITOR=vim bin/rails secrets:edit
+
+  ## MySQL tables
+  gene: geneinfo
+  condition: cgd
+  phenotype: hpo
+  omim: omim
+  ref_gene: refgene
+  gene_coordinate: gene_coordinate
+
+  ## Various Google Cloud public values
+  project_number: <%= ENV['GCP_PROJECT_NUMBER'] %>
+  project_id: <%= ENV['GCP_PROJECT_ID'] %>
+  scope: "https://www.googleapis.com/auth/userinfo.email,https://www.googleapis.com/auth/userinfo.profile,https://www.googleapis.com/auth/bigquery,https://www.googleapis.com/auth/genomics.readonly,https://www.googleapis.com/auth/devstorage.read_only"
+  dataset_id: <%= ENV['GCP_DATASET_ID'] %>
+  variantset_id: 12315586687108630050  # This does not seem to be used anywhere.
+
+  ## Google BigQuery tables
+  variants: passing_variants
+  annotations: annotations
+  subject_samples: subject_sample
+  subjects: subject
+  de_novo_variants: variants_de_novo
+  sanger_variants: variants_sanger
+  subject_measures: measures
+  sequenced_samples: sequenced_samples
+  annotated_variants: annotated_variants
+  dbsnp_coordinates: dbsnp_coordinate
+  tests: tests
+
+  # Default selected visible variant columns
+  selected_preferences: &selected
+    - sample_id
+    # variant related information
+    - reference_name
+    - start
+    - end
+    - reference_bases
+    - alternate_bases
+    - letter_genotype # computed
+    - zygosity # computed
+    - call_dp
+    - ad
+    - call_gq
+    - inheritance
+    - de_novo
+    # variant annotation
+    - refseq_id
+    - gene_symbol
+    - effects_with_impacts # computed
+    - a1000g_freq_max
+    - gnomad_genome_freq_max
+    - mssng_freq_max
+    - paths # computed
+    # sample related information
+    - sex
+    - platform
+    # additional information
+    - igv # computed // Merged with fixed option column
+    - annotation_id # Merged with fixed option column
+  # Default unselected (not visible) variant columns
+  unselected_preferences: &unselected
+    - category
+    - prioritizations
+    # annotated_variants
+    - gnomad_exome_freq_max
+    - exac_freq_max
+    - call_filter
+    - inherited_quality
+    - comp_het_rec
+    - entrez_id
+    - genotype_likelihood
+    - dbsnp
+    - clinvar_sig
+    - cgd_disease
+    - cgd_inheritance
+    - omim_phenotype
+    - call_phaseset
+    - effect_priority
+    - typeseq_priority
+    # subject_samples
+    - affection
+    - familyid
+    # de_novos
+    # sangers
+    - sanger_validated
+    - sanger_inheritance
+    # measures
+    # computed
+  # All potentially selectable visible variant columns
+  selectable_preferences: &selectable
+    - *selected
+    - *unselected
+  # Other columns available from query results that could be made user selectable
+  available_preferences: &available
+    # variants
+    - genotype # this is computed by letter_genotype and zygosity
+    # annotations
+    - results_count
+    - effect_impact
+    - call_call_set_id
+    - cg_freq_max
+    - freq_max
+    - nhlbi_freq_max
+    # subject_samples
+    - dnasource
+    - fatherid
+    - familytype
+    - motherid
+    - subject_id
+    # de_novos
+    # sangers
+    # measures
+    - phenotyped
+    # computed
+  variant_attrs:
+    - *selectable
+    - *available
+  annotated_variant_attrs:
+    - id
+    - annotation_id
+    - sample_id
+    - subject_id
+    - gene_symbol
+    - entrez_id
+    - refseq_id
+    - genotype
+    - genotype_likelihood
+    - sex
+    - fatherid
+    - motherid
+    - affection
+    - familyid
+    - familytype
+    - freq_max
+    - a1000g_freq_max
+    - nhlbi_freq_max
+    - exac_freq_max
+    - cg_freq_max
+    - gnomad_exome_freq_max
+    - gnomad_genome_freq_max
+    - effect_impact
+    - typeseq_priority
+    - effect_priority
+    - dbsnp
+    - clinvar_sig
+    - cgd_disease
+    - cgd_inheritance
+    - omim_phenotype
+    - ad
+    - call_call_set_id
+    - call_filter
+    - call_dp
+    - call_gq
+    - call_phaseset
+    - dnasource
+    - platform
+    - sanger_validated
+    - sanger_inheritance
+    - de_novo
+    - phenotyped
+    - reference_name
+    - start
+    - end
+    - reference_bases
+    - alternate_bases
+    - inherited_quality
+    - inheritance
+    - comp_het_rec
+    - mssng_freq_max
+  annotation_attrs:
+    - id
+    - reference_name
+    - start
+    - end
+    - reference_bases
+    - alternate_bases
+    - typeseq
+    - typeseq_priority
+    - refseq_id
+    - aa_flag
+    - effect
+    - effect_priority
+    - gene_symbol
+    - entrez_id
+    - gene_desc
+    - gene_type
+    - omim_id
+    - omim_phenotype
+    - MPO
+    - HPO
+    - CGD_disease
+    - CGD_inheritance
+    - ExAc_mis_z
+    - ExAc_lof_z
+    - ExAc_pLI
+    - ACMG_disease
+    - Clinvar_SIG
+    - Clinvar_SIG_ord
+    - Clinvar_CLNREF
+    - Clinvar_CLNACC
+    - Clinvar_ReviewStatus
+    - cosmic
+    - A1000g_all
+    - A1000g_eur
+    - A1000g_amr
+    - A1000g_eas
+    - A1000g_afr
+    - A1000g_sas
+    - NHLBI_all
+    - NHLBI_aa
+    - NHLBI_ea
+    - ExAC_Freq
+    - ExAC_AFR
+    - ExAC_AMR
+    - ExAC_EAS
+    - ExAC_FIN
+    - ExAC_NFE
+    - ExAC_OTH
+    - ExAC_SAS
+    - cg
+    - cg_filtered
+    - cgW597_AllFreq
+    - cgW597_CalledFreq
+    - cgW597_11s
+    - cgW597_Hs
+    - cgW597_Ls
+    - cg1KG436_AllFreq
+    - cg1KG436_CalledFreq
+    - cg1KG436_11s
+    - cg1KG436_Hs
+    - cg1KG436_Ls
+    - gnomAD_exome_ALL
+    - gnomAD_exome_AFR
+    - gnomAD_exome_AMR
+    - gnomAD_exome_ASJ
+    - gnomAD_exome_EAS
+    - gnomAD_exome_FIN
+    - gnomAD_exome_NFE
+    - gnomAD_exome_OTH
+    - gnomAD_exome_SAS
+    - gnomAD_genome_ALL
+    - gnomAD_genome_AFR
+    - gnomAD_genome_AMR
+    - gnomAD_genome_ASJ
+    - gnomAD_genome_EAS
+    - gnomAD_genome_FIN
+    - gnomAD_genome_NFE
+    - gnomAD_genome_OTH
+    - dbsnp
+    - dbsnp_common
+    - dbsnp_region
+    - dbsnp_wind
+    - sift_score
+    - PROVEAN_score
+    - polyphen_score
+    - ma_score
+    - mt_score
+    - CADD_phred
+    - phylopPMam
+    - phylopPMam_avg
+    - phylopVert100
+    - phylopVert100_avg
+    - phastCons_placental
+    - gerp_elem
+    - gerp_wgs
+    - pfam_annovar
+    - per_cds_affected
+    - per_transcripts_affected
+    - spx_dpsi
+    - spx_dpsi_z
+    - spx_gene
+    - spx_strand
+    - spx_transcript
+    - spx_exonN
+    - spx_seqType
+    - spx_effType
+    - spx_spliceDist
+    - dbscSNV_ADA_SCORE
+    - dbscSNV_RF_SCORE
+    - SegDup
+    - Repeat
+    - effect_impact
+    - freq_max
+    - A1000g_freq_max
+    - NHLBI_freq_max
+    - ExAC_freq_max
+    - cg_freq_max
+    - gnomAD_exome_freq_max
+    - gnomAD_genome_freq_max
+    - mssng_freq_max
+  subject_attrs:
+    - indexid
+    - fatherid
+    - motherid
+    - affection
+    - sex
+    - familyid
+    - familytype
+    - dob
+  subject_sample_attrs:
+    - submittedid
+    - indexid
+    - dnasource
+    - platform
+    - nimhid
+    - rudcrid
+    - comments
+    - software_version
+  subject_measure_attrs:
+    - indexid
+    - code
+    - testdate
+    - measure
+    - relevance
+    - test
+    - question
+    - legend
+  dbsnp_coordinate_attrs:
+    - reference_name
+    - start
+    - end
+    - dbsnp
+  sequenced_sample_attrs:
+    - call_call_set_name
+    - call_call_set_id
+
+development:
+  <<: *default
+
+test:
+  <<: *default
+
+production:
+  <<: *default

@@ -1,0 +1,218 @@
+
+<%= render partial: "sql_modal", locals: { sql: h(variant_search.sql).gsub("\n", "<br>").html_safe } %>
+<div class="row">
+  <div class="col-12 col-md-5">
+    <dl class="row align-items-center">
+      <% if variant_search.gene_ids.present? %>
+        <dt class="col-6 col-sm-3 col-md-6 text-right"><%= VariantSearch.human_attribute_name(:gene_id) %></dt>
+        <dd class="col-6 col-sm-3 col-md-6 mb-0"><%= variant_search.genes.map {|g| g[:name]}.join(", ") %></dd>
+      <% elsif variant_search.bed_file_regions.present? %>
+        <dt class="col-6 col-sm-3 col-md-6 text-right"><%= VariantSearch.human_attribute_name(:bed_file_regions) %></dt>
+        <dd class="col-6 col-sm-3 col-md-6 mb-0"><%= variant_search.bed_file_regions.map {|r| r.join('-')}.join(", ") %></dd>
+      <% elsif variant_search.dbsnp.present? %>
+        <dt class="col-6 col-sm-3 col-md-6 text-right"><%= VariantSearch.human_attribute_name(:dbsnp) %></dt>
+        <dd class="col-6 col-sm-3 col-md-6 mb-0"><%= link_to_dbsnp(variant_search.dbsnp) %></dd>
+      <% else %>
+        <dt class="col-6 col-sm-3 col-md-6 text-right"><%= VariantSearch.human_attribute_name(:chromosome) %></dt>
+        <dd class="col-6 col-sm-3 col-md-6 mb-0"><%= variant_search.f_chromosome %></dd>
+        <dt class="col-6 col-sm-3 col-md-6 text-right"><%= VariantSearch.human_attribute_name(:start_position) %></dt>
+        <dd class="col-6 col-sm-3 col-md-6 mb-0"><%= variant_search.f_start_position %></dd>
+        <dt class="col-6 col-sm-3 col-md-6 text-right"><%= VariantSearch.human_attribute_name(:end_position) %></dt>
+        <dd class="col-6 col-sm-3 col-md-6 mb-0"><%= variant_search.f_end_position %></dd>
+        <dt class="col-6 col-sm-3 col-md-6 text-right"><%= VariantSearch.human_attribute_name(:ucsc) %></dt>
+        <dd class="col-6 col-sm-3 col-md-6 mb-0"><%= link_to_ucsc_postion(variant_search.map_location) %></dd>
+        <dt class="col-6 col-sm-3 col-md-6 text-right"><%= VariantSearch.human_attribute_name(:dgv) %></dt>
+        <dd class="col-6 col-sm-3 col-md-6 mb-0"><%= link_to_dgv_postion(variant_search.map_location) %></dd>
+
+        <% if variant_search.f_reference_allele.present? %>
+          <dt class="col-6 col-sm-3 col-md-6 text-right"><%= VariantSearch.human_attribute_name(:reference_allele) %></dt>
+          <dd class="col-6 col-sm-3 col-md-6 mb-0"><%= variant_search.f_reference_allele %></dd>
+        <% end %>
+        <% if variant_search.f_alternate_allele.present? %>
+          <dt class="col-6 col-sm-3 col-md-6 text-right"><%= VariantSearch.human_attribute_name(:alternate_allele) %></dt>
+          <dd class="col-6 col-sm-3 col-md-6 mb-0"><%= variant_search.f_alternate_allele %></dd>
+        <% end %>
+      <% end %>
+      <dt class="col-6 col-sm-3 col-md-6 text-right"><%= VariantSearch.human_attribute_name(:passing) %></dt>
+      <dd class="col-6 col-sm-3 col-md-6 mb-0"><%= variant_search.passing.eql?("1") ? "Passing" : "All" %></dd>
+      <% if variant_search.submitted_ids.present? %>
+        <dt class="col-6 col-sm-3 col-md-6 text-right"><%= VariantSearch.human_attribute_name(:submitted_ids) %></dt>
+        <dd class="col-6 col-sm-3 col-md-6 mb-0"><%= variant_search.submitted_ids.join(", ") %></dd>
+      <% end %>
+      <% if variant_search.index_ids.present? %>
+        <dt class="col-6 col-sm-3 col-md-6 text-right"><%= VariantSearch.human_attribute_name(:index_ids) %></dt>
+        <dd class="col-6 col-sm-3 col-md-6 mb-0"><%= variant_search.index_ids.join(", ") %></dd>
+      <% end %>
+      <% if variant_search.affection.present? %>
+        <dt class="col-6 col-sm-3 col-md-6 text-right"><%= VariantSearch.human_attribute_name(:affection) %></dt>
+        <dd class="col-6 col-sm-3 col-md-6 mb-0"><%= variant_search.affection %></dd>
+      <% end %>
+      <% if variant_search.dna_source.present? %>
+        <dt class="col-6 col-sm-3 col-md-6 text-right"><%= VariantSearch.human_attribute_name(:dna_source) %></dt>
+        <dd class="col-6 col-sm-3 col-md-6 mb-0"><%= variant_search.dna_source %></dd>
+      <% end %>
+      <% if variant_search.platform.present? %>
+        <dt class="col-6 col-sm-3 col-md-6 text-right"><%= VariantSearch.human_attribute_name(:platform) %></dt>
+        <dd class="col-6 col-sm-3 col-md-6 mb-0"><%= variant_search.platform %></dd>
+      <% end %>
+      <% if variant_search.gender.present? %>
+        <dt class="col-6 col-sm-3 col-md-6 text-right"><%= VariantSearch.human_attribute_name(:gender) %></dt>
+        <dd class="col-6 col-sm-3 col-md-6 mb-0"><%= variant_search.gender %></dd>
+      <% end %>
+      <% if variant_search.role.present? %>
+        <dt class="col-6 col-sm-3 col-md-6 text-right"><%= VariantSearch.human_attribute_name(:role) %></dt>
+        <dd class="col-6 col-sm-3 col-md-6 mb-0"><%= variant_search.role %></dd>
+      <% end %>
+        <dt class="col-6 col-sm-3 col-md-6 text-right"><%= VariantSearch.human_attribute_name(:frequency) %></dt>
+        <dd class="col-6 col-sm-3 col-md-6 mb-0"><%= variant_search.frequency_operator %> <%= variant_search.frequency %></dd>
+      <% if variant_search.effects.present? && variant_search.effects.reject {|item| item.blank?}.present? %>
+        <dt class="col-6 col-sm-3 col-md-6 text-right"><%= VariantSearch.human_attribute_name(:effects) %></dt>
+        <dd class="col-6 col-sm-3 col-md-6 mb-0"><%= variant_search.effects.reject {|item| item.blank?}.map {|item| VariantSearch::EFFECTS[item.to_sym]}.join(", ") %></dd>
+      <% end %>
+      <% if variant_search.impacts.present? && variant_search.impacts.reject {|item| item.blank? }.present? %>
+        <dt class="col-6 col-sm-3 col-md-6 text-right"><%= VariantSearch.human_attribute_name(:impacts) %></dt>
+        <dd class="col-6 col-sm-3 col-md-6 mb-0"><%= variant_search.impacts.reject {|item| item.blank? }.map {|item| VariantSearch::IMPACTS[item.to_sym]}.join(", ") %></dd>
+      <% end %>
+      <% if variant_search.paths.present? && variant_search.paths.reject { |item| item.blank? }.present? %>
+        <dt class="col-6 col-sm-3 col-md-6 text-right"><%= VariantSearch.human_attribute_name(:paths) %></dt>
+        <dd class="col-6 col-sm-3 col-md-6 mb-0"><%= variant_search.paths.reject { |item| item.blank? }.map {|item| VariantSearch::PATHS[item.to_sym]}.join(", ") %></dd>
+      <% end %>
+        <dt class="col-6 col-sm-3 col-md-6 text-right"><%= VariantSearch.human_attribute_name(:sql) %></dt>
+        <dd class="col-6 col-sm-3 col-md-6 mb-0">
+          <%= link_to "Show", "#", :data => {:placement => "top", :toggle => "modal", :target => '#sql-modal'}, :class => 'btn btn-default btn-xs' %>
+        </dd>
+    </ul>
+  </div>
+
+  <div class="col-12 col-md-7">
+    <%= simple_form_for variant_search do |f| %>
+      <%= f.input :name, label: VariantSearch.human_attribute_name(:saved_name), :autofocus => true %>
+      <%= f.input :saved, as: :hidden, input_html: { :value => true } %>
+      <%= f.button :submit, :class => 'btn btn-primary', :value => dt("#{controller_name}.#{action_name}.submit", :model => dt("#{controller_name}.#{action_name}.model")) %>
+    <% end %>
+
+    <div class="row mt-2">
+      <div class="col-sm-4">
+        <%= link_to "Download #{variant_search.name.parameterize(separator: '_')}.txt", variant_search_path(variant_search, format: :text) %>
+      </div>
+      <div class="col-sm-4">
+        <%= link_to "Download #{variant_search.name.parameterize(separator: '_')}.xlsx", variant_search_path(variant_search, format: :xlsx) %>
+      </div>
+      <div class="col-sm-4">
+        <%= link_to "Visible Columns", "#", :data => {:placement => "top", :toggle => "modal", :target => '#preferences-modal'} %>
+      </div>
+    </div>
+    <div class="row mt-2">
+      <div class="col">
+        <b>
+        <% if variant_search.variants.count > 500 %>
+          <%= dt("notices.limited", count: variant_search.variants.first.results_count) %>
+          <%= link_to "#{variant_search.name.parameterize(separator: '_')}.xlsx", variant_search_path(variant_search, format: :xlsx) %>
+        <% else %>
+          <%= dt("notices.unlimited", count: variant_search.variants.count) %>
+        <% end %>
+        </b>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Data Table -->
+<div class="row">
+  <table id="datatable_with_item_options" class="table table-striped table-bordered variant-table">
+    <thead>
+      <!--------------------
+        Render the headers
+      ---------------------->
+      <tr>
+        <!-----
+          Links
+        ------->
+        <!-- This is left blank by design -->
+        <th></th>
+        <!----------------
+          Dynamic Columns
+        ------------------>
+        <% variant_search.user.selected_preferences.each do |column| %>
+          <% if !['annotation_id', 'igv'].include?(column) %>
+            <th><%= AnnotatedVariant.human_attribute_name(column.to_sym) %></th>
+          <% end %>
+        <% end %>
+      </tr>
+    </thead>
+    <tbody>
+      <!--------------------
+        Render the result
+      ---------------------->
+      <% variant_search.variants.take(500).each do |variant| %>
+        <tr id="<%= variant.sample_id %>">
+          <!-----
+            Links
+          ------->
+          <td>
+            <%= render partial: 'layouts/search_item_options', locals: {variant: variant} %>
+          </td>
+          <!----------------
+            Dynamic Columns
+          ------------------>
+          <% variant_search.user.selected_preferences.each do |column| %>
+            <% if column.eql?('sample_id') %>
+              <td data-column="sample_id">
+                <% if variant.phenotyped %>
+                  <%= link_to variant.sample_id, subject_sample_path(variant.sample_id) %>
+                <% else %>
+                  <%= variant.sample_id %>
+                <% end %>
+              </td>
+            <% elsif column.eql?('affection') %>
+              <td data-column="affection"><%= variant.interpretted_affection %></td>
+            <% elsif column.eql?('category') %>
+              <td data-column="category"><%= Trio.human_attribute_name(variant.category(variant_search.inheritance[variant.sample_id][variant.annotation_id])) %></td>
+            <% elsif column.eql?('prioritizations') %>
+              <% if variant_search.symbols.include?(variant.gene_symbol) %>
+                <td data-column="prioritizations_with_symbols"><%= variant.prioritizations(variant_search.inheritance[variant.sample_id][variant.annotation_id]).map {|p| Trio.human_attribute_name(p)}.join(", ") %></td>
+              <% else %>
+                <td data-column="prioritizations_without_symbols"><%= (variant.prioritizations(variant_search.inheritance[variant.sample_id][variant.annotation_id]) - [:het_risk]).map {|p| Trio.human_attribute_name(p)}.join(", ") %></td>
+              <% end %>
+            <% elsif column.eql?('annotation_id') %>
+              <!-- Moved to Search Item Options -->
+            <% elsif column.eql?('refseq_id') %>
+              <% if variant.refseq_id.present? && variant.refseq_id.split(":").present? %>
+                <td data-column="refseq_id_splited"><%= "#{variant.refseq_id.split(":")[0...3].join(":")}..." %></td>
+              <% else %>
+                <td data-column="refseq_id"><%= variant.refseq_id %></td>
+              <% end %>
+            <% elsif column.eql?('igv') %>
+              <!-- Moved to Search Item Options -->
+            <% elsif column.eql?('letter_genotype') %>
+              <td data-column="letter_genotype"><%= variant.letter_genotype.split(",").map {|g| shorten(g)}.join(",") %></td>
+            <% elsif column.eql?('reference_bases') %>
+              <td data-column="reference_bases">
+                <%= shorten(variant.reference_bases) %>
+              </td>
+            <% elsif column.eql?('alternate_bases') %>
+              <td data-column="alternate_bases">
+                <%= shorten(variant.alternate_bases) %>
+              </td>
+            <% elsif column.eql?('inheritance') %>
+              <td data-column="inheritance"><%= interpretted_inheritance(variant.reference_name, variant.sex, variant_search.inheritance[variant.sample_id][variant.annotation_id]) %></td>
+            <% elsif column.eql?('dbsnp') %>
+              <% if variant.dbsnp.present? %>
+                <td data-column="dbsnp_yes"><%= link_to_dbsnp(variant.dbsnp) %></td>
+              <% else %>
+                <td data-column="dbsnp_no"><%= variant.dbsnp %></td>
+              <% end %>
+            <% elsif ['reference_name', 'start', 'end'].include? column.to_s %>
+              <td data-column="<%= column.to_sym %>">
+                <%= variant.send(column.to_sym) %>
+              </td>
+            <% else %>
+              <td data-column="nl-generic/<%= column.to_sym %>"><%= variant.send(column.to_sym) %></td>
+            <% end %>
+          <% end %>
+
+        </tr>
+      <% end %>
+    </tbody>
+  </table>
+</div>

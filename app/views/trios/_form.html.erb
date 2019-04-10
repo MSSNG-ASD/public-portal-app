@@ -1,0 +1,130 @@
+<%= simple_form_for @trio do |f| %>
+  <div class="form-inputs">
+    <%= f.input :name, :placeholder => f.object.class.human_attribute_name(:name), :autofocus => true %>
+
+    <div class="card">
+      <div class="card-header">
+        <h3 class="card-title"><%=f.object.class.human_attribute_name(:subject_title)%></h3>
+      </div>
+      <div class="card-body">
+        <div id="subjectAccordian" role="tablist" aria-multiselectable="true">
+
+          <div class="card">
+            <div class="card-header" role="tab" id="subject">
+              <h4 class="card-title">
+                <a data-toggle="collapse" href="#collapseSubject" aria-expanded="true" aria-controls="collapseSubject">
+                <%=f.object.class.human_attribute_name(:accordion_subject_title)%>
+                </a>
+              </h4>
+            </div>
+            <div id="collapseSubject" data-parent="#subjectAccordian" class="card-body collapse in" role="tabpanel" aria-labelledby="subject">
+              <!-- <div class="card-body"> -->
+              <%= f.input :stringy_index_ids, input_html: {class: 'ajax-multi-select2', data: {records: f.object.subject, url: subject_selections_path, multiple: false, minimum: 3, placeholder: f.object.class.human_attribute_name(:index_ids_placeholder)}} %>
+              <!-- </div> -->
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-header">
+        <h3 class="card-title"><%=f.object.class.human_attribute_name(:genes_title)%></h3>
+      </div>
+      <div class="card-body">
+        <div id="genesAccordion" role="tablist" aria-multiselectable="true">
+
+          <div class="card">
+            <div class="card-header" role="tab" id="file">
+              <h4 class="card-title">
+                <a data-toggle="collapse" href="#collapseFile" aria-expanded="true" aria-controls="collapseFile">
+                <%=f.object.class.human_attribute_name(:accordion_file_title)%>
+                </a>
+              </h4>
+            </div>
+            <div id="collapseFile" data-parent="#genesAccordion" class="card-body collapse in" role="tabpanel" aria-labelledby="file">
+              <!-- <div class="card-body"> -->
+                <div class="row">
+                  <div class="col-md-12">
+                  <%= f.input :uploaded_gene_file, :as => :file, hint: Trio.human_attribute_name(:file_hint) %>
+                  <%= link_to 'TCAG Autism Risk Genes', '/risk_genes.txt', download: 'data', target: "_blank"%>
+                  </div>
+                </div>
+              <!-- </div> -->
+            </div>
+          </div>
+
+          <div class="card">
+            <div class="card-header" role="tab" id="gene">
+              <h4 class="card-title">
+                <a data-toggle="collapse" href="#collapseGene" aria-expanded="true" aria-controls="collapseGene">
+                <%=f.object.class.human_attribute_name(:accordion_gene_title)%>
+                </a>
+              </h4>
+            </div>
+            <div id="collapseGene" data-parent="#genesAccordion" class="card-body collapse in" role="tabpanel" aria-labelledby="gene">
+              <!-- <div class="card-body"> -->
+              <%= f.input :stringy_gene_ids, input_html: {class: 'ajax-multi-select2', data: {records: f.object.genes, url: gene_selections_path, multiple: true, minimum: 3, placeholder: f.object.class.human_attribute_name(:gene_ids_placeholder)}} %>
+              <!-- </div> -->
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-header">
+        <h3 class="card-title"><%=f.object.class.human_attribute_name(:filter_title)%></h3>
+      </div>
+      <div class="card-body">
+        <div id="filterAccordion" role="tablist" aria-multiselectable="true">
+
+          <div class="card">
+            <div class="card-header" role="tab" id="significance">
+              <h4 class="card-title">
+                <a data-toggle="collapse" href="#collapseSignificance" aria-expanded="true" aria-controls="collapseSignificance">
+                <%=f.object.class.human_attribute_name(:accordion_significance_title)%>
+                </a>
+              </h4>
+            </div>
+            <div id="collapseSignificance" data-parent="#filterAccordion" class="card-body collapse in" role="tabpanel" aria-labelledby="significance">
+              <!-- <div class="card-body"> -->
+
+                <div class="row">
+                  <div class="col-md-4">
+                <%= f.input :frequency_operator, prompt: f.object.class.human_attribute_name(:frequency_operator), collection: [["<", "<"], ["<=", "<="]], label_method: :last, value_method: :first  %>
+                  </div>
+                  <div class="col-md-4">
+                <%= f.input :frequency, as: :float %>
+                  </div>
+                  <div class="col-md-4">
+                <%= f.input :zygosity, prompt: f.object.class.human_attribute_name(:zygosity), collection: ['homo/hemizygous', 'heterozygous'] %>
+                  </div>
+                </div>
+                <div class="row">
+                  <div class="col-md-4">
+                <%= f.input :effects, label_html: {rel: 'popover', data: {content: dt('popovers.effects'), html: true, trigger: 'hover', toggle: 'popover', placement: 'right'}}, collection: VariantSearch::EFFECTS.invert.to_a, input_html: {class: 'select2', multiple: "multiple", data: {placeholder: f.object.class.human_attribute_name(:effects_placeholder)}} %>
+                  </div>
+                  <div class="col-md-4">
+                <%= f.input :impacts, label_html: {rel: 'popover', data: {content: dt('popovers.impacts'), html: true, trigger: 'hover', toggle: 'popover', placement: 'right'}}, collection: VariantSearch::IMPACTS.invert.to_a, input_html: {class: 'select2', multiple: "multiple", data: {placeholder: f.object.class.human_attribute_name(:impacts_placeholder)}} %>
+                  </div>
+                  <div class="col-md-4">
+                <%= f.input :paths, label_html: {rel: 'popover', data: {content: dt('popovers.paths'), html: true, trigger: 'hover', toggle: 'popover', placement: 'right'}}, collection: VariantSearch::PATHS.invert.to_a, input_html: {class: 'select2', multiple: "multiple", data: {placeholder: f.object.class.human_attribute_name(:paths_placeholder)}} %>
+                  </div>
+                </div>
+
+              <!-- </div> -->
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="form-actions mt-3">
+    <%= link_to dt('actions.cancel'), search_trios_path, :class => 'btn btn-secondary' %>
+    <%= f.button :submit, :class => 'btn btn-primary', :value => dt("#{controller_name}.#{action_name}.submit", :model => dt("#{controller_name}.#{action_name}.model")) %>
+  </div>
+<% end %>

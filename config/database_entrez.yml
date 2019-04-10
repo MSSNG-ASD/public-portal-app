@@ -1,0 +1,24 @@
+#   Ensure the mysql2 gem is defined in your Gemfile
+#   gem 'mysql2'
+#
+default: &default
+  adapter: mysql2
+  encoding: utf8
+  host: <%= ENV['ENTREZ_DB_HOST'] || '127.0.0.1' %>
+  port: <%= (ENV['ENTREZ_DB_PORT'] || '3306').to_i %>
+  database: <%= ENV['ENTREZ_DB_NAME'] || 'entrez_gene_20180612' %>
+  username: <%= ENV['ENTREZ_DB_USERNAME'] || 'entrez' %>
+  password: <%= ENV['ENTREZ_DB_PASSWORD'] || 'entrez' %>
+
+development:
+  <<: *default
+
+# Warning: The database defined as "test" will be erased and
+# re-generated from your development database when you run "rake".
+# Do not set this db to the same as development or production.
+test:
+  <<: *default
+  database: test_entrez_gene_20180612
+
+production:
+  <<: *default

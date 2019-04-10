@@ -1,0 +1,6 @@
+<% if variant_search.variants.present? && variant_search.variants.count != variant_search.variants.first.results_count -%>
+<%= "WARNING: #{variant_search.variants.count} of #{variant_search.variants.first.results_count} records returned." %>
+<% end -%>
+<% variant_search.variants.each do |variant| -%>
+<%= [variant.plink_family, variant.sample_id, variant.plink_father, variant.plink_mother, variant.plink_gender, variant.plink_affection, variant.reference_name, variant.start, variant.end, variant.reference_bases, variant.allele1, variant.allele2].join("\t") %>
+<% end -%>

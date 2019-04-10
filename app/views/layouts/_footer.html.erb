@@ -1,0 +1,12 @@
+<footer class="autism">
+  <div class="container-fluid">
+    <% if user_signed_in? %>
+      <small>
+        Dataset: <%= Rails.configuration.x.query['project_id'] %>:<%= Rails.configuration.x.query['dataset_id'] %>
+      </small>
+    <% end %>
+    <%= link_to 'http://mss.ng/', class: 'autism', target: "_blank" do %>
+      <p class="text-regular">mss.ng</p>
+    <% end %>
+  </div>
+</footer>

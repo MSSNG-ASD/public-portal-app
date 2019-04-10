@@ -1,0 +1,26 @@
+<div class="row">
+  <div class="col">
+    <h1><%= dt("#{controller_name}.#{action_name}.title", :model => dt("#{controller_name}.#{action_name}.model")) %></h1>
+    <%= link_to Trio.human_attribute_name(:destroy_all), delete_all_trios_path, class: 'btn btn-danger', method: :delete, data: { confirm: dt("#{controller_name}.#{action_name}.confirm") } %>
+  </div>
+</div>
+<div class="row">
+  <table id="datatable_all" class="table table-striped table-bordered">
+    <thead>
+  	  <tr>
+  	    <th><%= Trio.human_attribute_name(:name) %></th>
+  	  </tr>
+    </thead>
+    <tbody>
+  		<% @trios.each do |trio| %>
+  		  <tr>
+  		    <td>
+  					<%= link_to content_tag(:span, "", :class => "fa fa-trash-o"), trio_path(trio), :method => :delete, :class => "btn btn-mini btn-danger btn-xs", :data => { :confirm => dt("#{controller_name}.#{action_name}.confirm", :model => trio.name) } %>
+  					<%= link_to content_tag(:span, "", :class => "fa fa-pencil"), edit_trio_path(trio), :class => 'btn btn-small btn-primary btn-xs' %>
+  					<%= link_to trio.name, trio_path(trio) %>
+  				</td>
+  		  </tr>
+  		<% end %>
+    </tbody>
+  </table>
+</div>

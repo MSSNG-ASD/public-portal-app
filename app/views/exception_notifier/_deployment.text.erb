@@ -1,0 +1,5 @@
+<% ['RAILS_ENV', 'DOMAIN_NAME', 'USER_DB_HOST', 'ENTREZ_DB_HOST'].each do |key| %>
+<%= key %>: <%= ENV[key] || '(not set)' %>
+<% end %>
+
+Test Helper API: <%= (!ENV['TEST_JWT_SECRET'].nil? and !ENV['TEST_JWT_SECRET'].empty?) ? 'Enabled' : 'Disabled' %>

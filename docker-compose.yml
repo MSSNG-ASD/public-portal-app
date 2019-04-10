@@ -1,0 +1,60 @@
+##############################
+# For local development only #
+##############################
+version: '3'
+services:
+  # Portal Service
+  portal:
+    image: gcr.io/example-gcp-project/mssng:dev
+    command: 'tail -f /dev/null'  # This will keep the container running. Only use for investigation with manual start.
+    container_name: local.autism.portal
+    ports:
+      - 3000:3000
+    environment:
+      # This shares and reuses some variables from .env.dist (specifically for the portal container.)
+      RAILS_ENV: development
+      GA_TRACKING_ID: "${GA_TRACKING_ID}"
+      GCP_CLIENT_ID: "${GCP_CLIENT_ID}"
+      GCP_CLIENT_SECRET: "${GCP_CLIENT_SECRET}"
+      GCP_DATASET_ID: "${GCP_DATASET_ID}"
+      GCP_PROJECT_ID: "${GCP_PROJECT_ID}"
+      GCP_PROJECT_NUMBER: "${GCP_PROJECT_NUMBER}"
+      USER_DB_HOST: mysql
+      USER_DB_NAME: users_staging
+      USER_DB_USERNAME: root
+      USER_DB_PASSWORD: rubyisallaround
+      ENTREZ_DB_HOST: mysql
+      ENTREZ_DB_NAME: entrez_staging
+      ENTREZ_DB_USERNAME: root
+      ENTREZ_DB_PASSWORD: rubyisallaround
+      STACKDRIVER_DISABLED: "1"
+      SUPPORT_EMAIL_ADDRESS: "${SUPPORT_EMAIL_ADDRESS}"
+      TEST_JWT_SECRET: "${TEST_JWT_SECRET}"
+    volumes:
+      - './app:/mssng-portal/app:rw'
+      - './config:/mssng-portal/config:rw'
+      - './Gemfile:/mssng-portal/Gemfile:rw'
+      - './Gemfile.lock:/mssng-portal/Gemfile.lock:rw'
+      - './spec:/mssng-portal/spec:ro'
+      - '~/.config/gcloud:/root/.config/gcloud:ro'
+
+  # Remote Test Runner
+  test-runner:
+    image: gcr.io/example-gcp-project/mssng:dev-e2e
+    command: 'tail -f /dev/null'  # This will keep the container running. Only use for investigation with manual start.
+    container_name: local.autism.portal.test_runner
+    environment:
+      ROOT_URL: http://portal:3000
+      TEST_JWT_SECRET: "${TEST_JWT_SECRET}"
+      TEST_AUTH_EMAIL: "${TEST_AUTH_EMAIL}"
+    volumes:
+      - '.:/mssng-portal:rw'
+
+  # Local RDS
+  mysql:
+    image: mysql:5.7
+    container_name: local.autism.rds
+    environment:
+      MYSQL_ROOT_PASSWORD: rubyisallaround
+    ports:
+      - 13306:3306

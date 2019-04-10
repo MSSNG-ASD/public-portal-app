@@ -1,0 +1,16 @@
+<div class="modal fade" id="sql-modal" tabindex="-1" role="dialog" aria-labelledby="sql-modal-label" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+        <h4 class="modal-title" id="sql-modal-label"><%= dt('navbar.sql') %></h4>
+      </div>
+      <div class="modal-body">
+				<button class="clipboard-btn btn btn-primary pull-right" data-clipboard-action="copy" data-clipboard-target="#sql">
+					Copy to Clipboard
+				</button>
+				<div id="sql"><%= sql %></div>
+      </div>
+    </div>
+  </div>
+</div>

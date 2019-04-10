@@ -1,0 +1,16 @@
+<div class="row">
+  <div class="col">
+    <h1><%= dt("#{controller_name}.#{action_name}.title", model: dt("#{controller_name}.#{action_name}.model"), instance: @gene.symbol) %></h1>
+  </div>
+</div>
+<div class="row">
+  <div class="col">
+    <%= render partial: "gene_searches/result", locals: { result: @gene } %>
+  </div>
+</div>
+<div class="row">
+  <div class="col form-actions">
+  	<%= link_to dt('actions.back'), :back, class: 'btn btn-secondary' %>
+  	<%= link_to "#{VariantSearch.model_name.human} for #{@gene.symbol}", "#{url_for(action: :create, controller: :variant_searches)}?" + {'variant_search[search]' => @gene.symbol, 'variant_search[passing]' => true, 'variant_search[affection]' => 'affected', 'variant_search[impacts][]' => 'high', 'variant_search[frequency]' => 0.01, 'variant_search[frequency_operator]' => '<=', 'variant_search[upstream_bases]' => 1000}.to_param, method: :post, class: 'btn btn-primary' %>
+  </div>
+</div>

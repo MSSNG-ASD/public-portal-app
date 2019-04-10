@@ -1,0 +1,19 @@
+<div class="jumbotron">
+  <div class="container">
+    <div class="row mb-3 mb-lg-0">
+      <div class="col-lg-6">
+        <h1 class="display-4"><%= SubjectSampleSearch.model_name.human %></h1>
+      </div>
+      <div class="col-lg-6 d-flex justify-content-lg-end align-items-lg-center">
+        <%= link_to SubjectSampleSearch.human_attribute_name(:history), subject_sample_searches_path, class: 'btn btn-secondary' %>
+        <%= link_to SubjectSampleSearch.human_attribute_name(:saved_history), saved_subject_sample_searches_path, class: 'btn btn-secondary ml-3' %>
+        <%= link_to SubjectSampleSearch.human_attribute_name(:advanced), new_subject_sample_search_path, class: 'btn btn-secondary ml-3' %>
+      </div>
+    </div>
+    <%= simple_form_for @subject_sample_search do |f| %>
+      <%= f.input :search, autofocus: true, label: false, placeholder: SubjectSampleSearch.human_attribute_name(:search_placeholder) %>
+      <%= content_tag :h4, SubjectSampleSearch.human_attribute_name(:search_popover).html_safe, class: "help-block" %>
+      <%= f.button :submit, class: 'd-none', id: 'hidden_button' %>
+    <% end %>
+  </div>
+</div>

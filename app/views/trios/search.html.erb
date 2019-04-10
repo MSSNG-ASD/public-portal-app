@@ -1,0 +1,23 @@
+<div class="jumbotron">
+  <div class="container-fluid">
+    <div class="row mb-3 mb-lg-0">
+      <div class="col-lg-6">
+        <h1 class="display-4"><%= Trio.model_name.human %></h1>
+      </div>
+      <div class="col-lg-6 d-flex justify-content-lg-end align-items-lg-center">
+        <%= link_to Trio.human_attribute_name(:history), trios_path, class: 'btn btn-secondary' %>
+        <%= link_to Trio.human_attribute_name(:saved_history), saved_trios_path, class: 'btn btn-secondary ml-3' %>
+        <%= link_to Trio.human_attribute_name(:advanced), new_trio_path, class: 'btn btn-secondary ml-3' %>
+      </div>
+    </div>
+    <%= simple_form_for @trio do |f| %>
+      <%= content_tag :h4, Trio.human_attribute_name(:search_defaults).html_safe, class: "help-block" %>
+      <%= f.input :search, autofocus: true, label: false, placeholder: Trio.human_attribute_name(:search_placeholder) %>
+      <%= f.input :passing, as: :hidden %>
+      <%= f.input :frequency, as: :hidden %>
+      <%= f.input :frequency_operator, as: :hidden %>
+      <%= content_tag :h4, Trio.human_attribute_name(:search_popover).html_safe, class: "help-block" %>
+      <%= f.button :submit, class: 'd-none', id: 'hidden_button' %>
+    <% end %>
+  </div>
+</div>

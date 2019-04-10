@@ -1,0 +1,33 @@
+variants = @variant_search.variants
+
+wb = xlsx_package.workbook
+wb.add_worksheet(name: "Variants") do |sheet|
+
+  sheet.add_row [@variant_search.user.selected_preferences - ['igv']].flatten.map {|column| AnnotatedVariant.human_attribute_name(column.to_sym)}
+
+  if !@variant_search.search.present? && (variants.present? && variants.count != variants.first.results_count)
+    sheet.add_row ["WARNING: #{variants.count} of #{variants.first.results_count} records returned."]
+  end
+
+  variants.each do |variant|
+    variant_columns = []
+    [@variant_search.user.selected_preferences - ['igv']].flatten.each do |column|
+      if column.eql?('inheritance')
+        variant_columns << interpretted_inheritance(variant.reference_name, variant.sex, @variant_search.inheritance[variant.sample_id][variant.annotation_id])
+      elsif column.eql?('affection')
+        variant_columns << variant.interpretted_affection
+      elsif column.eql?('category')
+        variant_columns << Trio.human_attribute_name(variant.category(@variant_search.inheritance[variant.sample_id][variant.annotation_id]))
+      elsif column.eql?('prioritizations')
+        if @variant_search.symbols.include?(variant.gene_symbol)
+          variant_columns << variant.prioritizations(@variant_search.inheritance[variant.sample_id][variant.annotation_id]).map {|p| Trio.human_attribute_name(p)}.join(", ")
+        else
+          variant_columns << (variant.prioritizations(@variant_search.inheritance[variant.sample_id][variant.annotation_id]) - [:het_risk]).map {|p| Trio.human_attribute_name(p)}.join(", ")
+        end
+      else
+        variant_columns << variant.send(column.to_sym)
+      end
+    end
+    sheet.add_row variant_columns
+  end
+end

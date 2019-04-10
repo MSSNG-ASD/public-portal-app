@@ -1,0 +1,1 @@
+ENTREZ_DB = YAML.load(ERB.new(IO.read(File.join(Rails.root, "config", "database_entrez.yml"))).result)[Rails.env.to_s]

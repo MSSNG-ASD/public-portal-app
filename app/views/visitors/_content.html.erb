@@ -1,0 +1,30 @@
+  <div class='row about'>
+    <div class='col-md-6'>
+      <p class='text-intro'>
+        MSSNG is a groundbreaking collaboration between Autism Speaks, Google and the research community to create the world’s largest genomic database on autism. MSSNG’s goal is to provide the best resources to enable the identification of many subtypes of autism, which may lead to better diagnostics, as well as personalized and more accurate treatments
+        <%= awesome_share_buttons(yield(:title), url: "http://research.mss.ng/") %>
+      </p>
+    </div>
+    <div class='col-md-6'>
+      <p class='text-regular'>
+        The first phase of MSSNG is to complete and make data available from the whole genome sequencing of blood DNA (minimum 30x high-quality coverage) of 10,000 individuals from families from the Autism Genetic Research Exchange (AGRE) repository, or from other well-phenotyped cohorts entering into this study. The MSSNG database, built using the Google Cloud Platform and Google Genomics, intends to make its data as useful and widely accessible to researchers as possible, including supporting access to local compute and storage resources, and providing genomic exploration tools for standard and custom analyses. Whole genome sequences and their annotations and phenotype data will be continually added to MSSNG with different levels and portals of access to researchers. Key leaders of MSSNG are David Glazer (Verily), Thomas Frazier (Autism Speaks) and Stephen Scherer (SickKids Hospital and University of Toronto). MSSNG’s philosophy is to promote and enable ‘open science’ research to lead to a better understanding of autism. We welcome you to join us. <%= link_to("Click here to apply for access to the data.", "https://science.grants.autismspeaks.org/genetics") %> Please contact us at <%= mail_to("coordinatingcenter@mss.ng", "coordinatingcenter@mss.ng") %> with any questions.
+      </p>
+      <ul class='doc-list'>
+        <li>
+          <%= link_to("README", "/assets/documents/mssng+researcher_readme.pdf", class: "pdf-doc", target: "_blank") %>
+        </li>
+        <li>
+          <%= link_to("Privacy Policy&nbsp;- Researchers".html_safe, "/assets/documents/privacy_policy_-_mssng_researcher_portal.pdf", class: "pdf-doc", target: "_blank") %>
+        </li>
+        <li>
+          <%= link_to("Summary of Samples Available", "/assets/documents/db5_sample_list_aboutmssng.xlsx", class: "xls-doc", target: "_blank") %>
+        </li>
+        <li>
+          <%= link_to("Data Access Agreement and Application&nbsp;- USA".html_safe, "/assets/documents/form_mssng_daa_2.0_usa.pdf", class: "pdf-doc", target: "_blank") %>
+        </li>
+        <li>
+          <%= link_to("Data Access Agreement and Application&nbsp;- International".html_safe, "/assets/documents/form_mssng_daa_2.0_international.pdf", class: "pdf-doc", target: "_blank") %>
+        </li>
+      </ul>
+    </div>
+  </div>
