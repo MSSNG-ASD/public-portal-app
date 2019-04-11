@@ -4,7 +4,7 @@
 
 If you are interested in contributing to the Portal Service, we encourage you to
 reach out to us before sending a PR to discuss how we can work with you to accept
-your change. You can do this by creating a GH issue.
+your change. You can do this by [creating a new issue](https://github.com/MSSNG-ASD/portal-service/issues/new).
 
 ## Guides
 
