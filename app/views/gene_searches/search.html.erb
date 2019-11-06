@@ -1,19 +1,17 @@
-<div class="jumbotron">
-  <div class="container-fluid">
-    <div class="row mb-3 mb-lg-0">
-      <div class="col-lg-6">
-        <h1 class="display-4"><%= GeneSearch.model_name.human %></h1>
-      </div>
-      <div class="col-lg-6 d-flex justify-content-lg-end align-items-lg-center">
-        <%= link_to GeneSearch.human_attribute_name(:history), gene_searches_path, class: 'btn btn-secondary' %>
-        <%= link_to GeneSearch.human_attribute_name(:saved_history), saved_gene_searches_path, class: 'btn btn-secondary ml-3' %>
-        <%= link_to GeneSearch.human_attribute_name(:advanced), new_gene_search_path, class: 'btn btn-secondary ml-3' %>
-      </div>
-    </div>
-    <%= simple_form_for @gene_search do |f| %>
-      <%= f.input :search, label: false, autofocus: true, input_html: {class: 'ajax-multi-select2-submit', data: {records: f.object.genes, url: gene_selections_path, multiple: true, minimum: 3, placeholder: f.object.class.human_attribute_name(:gene_ids_placeholder)}} %>
-      <%= content_tag :h4, GeneSearch.human_attribute_name(:search_popover).html_safe, class: "help-block" %>
-      <%= f.button :submit, class: 'd-none', id: 'hidden_button' %>
-    <% end %>
+<div class="row">
+  <div class="col">
+    <%= render(
+      partial: 'layouts/one_box_query',
+      locals: {
+        target: @gene_search,
+        selection_url: gene_selections_path,
+        quick_help_text: 'Query for gene(s) by symbol. e.g. <code>NRXN1</code>',
+        query_history_url: gene_searches_path,
+        saved_queries_url: saved_gene_searches_path,
+        advanced_query_url: new_gene_search_path,
+        has_one_box_help: false,
+        default_criteria: [],
+      }
+    ) %>
   </div>
 </div>

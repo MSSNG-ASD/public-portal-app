@@ -43,13 +43,29 @@ Rails.application.routes.draw do
     match 'phenotype', on: :collection, via:  :get, defaults: { format: 'json' }
     match 'mim', on: :collection, via:  :get, defaults: { format: 'json' }
   end
+
+  resources :release_note_read_receipts
+
   # match 'help/:controller_id/:action_id' => 'help#show', via: :get, as: 'help'
   match '(errors)/:status', to: 'errors#show', constraints: {status: /\d{3}/}, via: :all
   get '/auth/failure' => 'sessions#failure'
-  get 'pages/publications'
+  # get 'pages/publications'
   get 'pages/acknowledgements'
   get 'visitors/about'
-  get 'visitors/publications'
+  # get 'visitors/publications'
+  get '/publications' => 'visitors#publications'
+  get '/release-notes' => 'visitors#change_logs'
+  get '/release-notes/:entry_id' => 'visitors#change_logs'
+  get '/me' => 'profile#show'
+
+  get '/datasets' => 'datasets#index'
+  get '/dataset/:id' => 'datasets#get'
+
+  if ENV['RAILS_ENV'] == 'development'
+    get '/dev/datasets' => 'datasets#index'
+    get '/dev/dataset/:id' => 'datasets#get'
+  end
+
   root to: 'visitors#index'
 
   ##############################################################################
@@ -59,8 +75,10 @@ Rails.application.routes.draw do
   # set of privileged endpoints.                                               #
   ##############################################################################
   if !ENV['TEST_JWT_SECRET'].nil? and !ENV['TEST_JWT_SECRET'].empty?
+    get '/test/ping', to: 'test#ping'
     post '/test/auth', to: 'test#auth'
     post '/test/data-reset', to: 'test#reset_data'
     get '/test/error', to: 'test#trigger_sample_error'
+    get '/test/nuclear-error', to: 'test#trigger_nuclear_error'
   end
 end

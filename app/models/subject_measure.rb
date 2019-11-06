@@ -4,11 +4,13 @@ class SubjectMeasure
   include ActiveModel::Model
 
   def self.measures_table
-    @@measures_table = "`#{Rails.configuration.x.query['dataset_id']}.#{Rails.configuration.x.query['subject_measures']}`"
+    search_config = Rails.configuration.x.query['db6']
+    @@table = "`#{search_config['project_id']}.#{search_config['tables']['subject_measures']}`"
   end
 
   def self.tests_table
-    @@tests_table = "`#{Rails.configuration.x.query['dataset_id']}.#{Rails.configuration.x.query['tests']}`"
+    search_config = Rails.configuration.x.query['db6']
+    @@table = "`#{search_config['project_id']}.#{search_config['tables']['tests']}`"
   end
 
   def self.attrs
@@ -19,49 +21,47 @@ class SubjectMeasure
     sql  = <<EOL
 #standardSQL
 WITH
-measures as (
-SELECT
-indexid,
-code,
-testdate,
-measure
-FROM
-#{measures_table}
-WHERE
-indexid = '#{id}'
-),
-tests as (
-SELECT
-code,
-relevance,
-test,
-question,
-legend
-FROM
-#{tests_table}
-),
-results as (
-SELECT
-measures.testdate,
-measures.measure,
-tests.relevance,
-tests.test,
-tests.question,
-tests.legend
-FROM
-measures
-JOIN
-tests
-ON
-measures.code = tests.code
-)
-SELECT
-*
-FROM
-results
+  measures as (
+    SELECT
+      indexid,
+      code,
+      testdate,
+      measure
+    FROM
+      #{measures_table}
+    WHERE
+      indexid = '#{id}'
+  ),
+  tests as (
+    SELECT
+      code,
+      relevance,
+      test,
+      question,
+      legend
+    FROM
+      #{tests_table}
+  ),
+  results as (
+    SELECT
+      measures.testdate,
+      measures.measure,
+      tests.relevance,
+      tests.test,
+      tests.question,
+      tests.legend
+    FROM
+      measures
+    JOIN
+      tests
+      ON
+        measures.code = tests.code
+  )
+SELECT *
+FROM results
 EOL
 
-    BigQuery.new(user.credentials).exec_query(sql).map {|record| SubjectMeasure.new(record)}
+    BigQuery.new(user.credentials).exec_query(sql).all.map {|record| SubjectMeasure.new(record)}
   end
 
   # getter/setter methods for result columns

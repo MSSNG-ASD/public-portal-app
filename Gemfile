@@ -110,3 +110,6 @@ gem 'tzinfo-data', platforms: [:mingw, :mswin, :x64_mingw, :jruby]
 
 gem 'stackdriver'
 gem 'concurrent-ruby-edge', '0.3.1', require: 'concurrent-edge'
+gem 'redcarpet'
+
+# gem 'octicons'

@@ -1,34 +1,88 @@
-<%# add navigation links to this file %>
-<li class="nav-item <%= 'active' if controller_name.eql?('variant_searches') %>">
-	<%= link_to VariantSearch.model_name.human(count: 2), search_variant_searches_path, class: "nav-link", rel: 'popover', data: {content: VariantSearch.human_attribute_name(:popover), trigger: 'hover', toggle: 'popover', placement: 'bottom'} %>
-</li>
-<li class="nav-item <%= 'active' if controller_name.eql?('trios') %>">
-	<%= link_to Trio.model_name.human(count: 2), search_trios_path, class: "nav-link", rel: 'popover', data: {content: Trio.human_attribute_name(:popover), trigger: 'hover', toggle: 'popover', placement: 'bottom'} %>
-</li>
-<li class="nav-item <%= 'active' if controller_name.eql?('gene_searches') %>">
-	<%= link_to GeneSearch.model_name.human(count: 2), search_gene_searches_path, class: "nav-link", rel: 'popover', data: {content: GeneSearch.human_attribute_name(:popover), trigger: 'hover', toggle: 'popover', placement: 'bottom'} %>
-</li>
-<li class="nav-item <%= 'active' if controller_name.eql?('subject_samples') %>">
-	<%= link_to SubjectSampleSearch.model_name.human(count: 2), search_subject_sample_searches_path, class: "nav-link", rel: 'popover', data: {content: SubjectSampleSearch.human_attribute_name(:popover), trigger: 'hover', toggle: 'popover', placement: 'bottom'} %>
-</li>
+<%# This is for authenticated users. %>
+<% nav_items = [
+  {
+    model_class: VariantSearch,
+    controller_names: ['variant_searches'],
+    first_page_url: search_variant_searches_path,
+  },
+  {
+    model_class: Trio,
+    controller_names: ['trios'],
+    first_page_url: search_trios_path,
+  },
+  {
+    model_class: SubjectSampleSearch,
+    controller_names: ['subject_samples', 'subject_sample_searches'],
+    first_page_url: search_subject_sample_searches_path,
+  },
+  {
+    model_class: GeneSearch,
+    controller_names: ['genes', 'gene_searches'],
+    first_page_url: search_gene_searches_path,
+  },
+].each do | nav_item | %>
+  <li class="nav-item <%= 'active' if nav_item[:controller_names].include? controller_name %>">
+    <%= link_to(
+      nav_item[:model_class].model_name.human(count: 2),
+      nav_item[:first_page_url],
+      class: "nav-link",
+      rel: 'popover',
+      data: {
+        content: nav_item[:model_class].human_attribute_name(:popover),
+        trigger: 'hover',
+        toggle: 'popover',
+        placement: 'bottom',
+      }
+    ) %>
+  </li>
+<% end %>
 
 <li class="nav-item dropdown">
-  <a class="nav-link dropdown-toggle" href="#" id="aboutDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">About</a>
-  <div class="dropdown-menu" aria-labelledby="aboutDropdown">
+  <a class="nav-link dropdown-toggle"
+     href="#"
+     id="aboutDropdown"
+     role="button"
+     data-toggle="dropdown"
+     aria-haspopup="true"
+     aria-expanded="false">More</a>
+  <div class="dropdown-menu dropdown-menu-right" aria-labelledby="aboutDropdown">
+    <div class="dropdown-header">About</div>
+
     <%= link_to "About MSSNG", visitors_about_path, class: "dropdown-item" %>
     <%= link_to "How to Cite MSSNG", pages_acknowledgements_path, class: "dropdown-item" %>
-    <%= link_to "Publications", pages_publications_path, class: "dropdown-item" %>
-    <%= link_to "Subject/Sample Info", "https://docs.google.com/spreadsheets/d/1UzwaRaaUZg3f5zRAdrSwZiprKAl-qnkhoJv6Zp6ijzE", class: "pdf-doc dropdown-item", target: "_blank" %>
-		<%= link_to "MSSNG Portal Quickstart", "https://drive.google.com/open?id=1t4lxMxTTD8DuLqYC-sudp9waX-cBiruB", class: "pdf-doc dropdown-item", target: "_blank" %>
-		<%= link_to "De Novo Variants", "https://drive.google.com/open?id=1ZWrJqFg8gOtvN6yxC4ZTRvL968XiyqHP", class: "pdf-doc dropdown-item", target: "_blank" %>
+    <%= link_to "Publications", publications_path, class: "dropdown-item" %>
+    <%= link_to "Release Notes", release_notes_path, class: "dropdown-item" %>
+    <%# FIXME Replace with the web version of the update %>
 		<%= link_to "Changes", "https://docs.google.com/document/d/14aiE9taKA0HyxT4tR5F7V_7vNxkcm8cCI4n5BguZ4GE", class: "pdf-doc dropdown-item", target: "_blank" %>
+
+    <div class="dropdown-header">Downloadable Data</div>
+
+    <%= link_to "Subject/Sample Info", "https://docs.google.com/spreadsheets/d/1F9bmUD6DSkccu_5a71UrctxCKSPuVHDXkrGvLagpwtM/", class: "pdf-doc dropdown-item", target: "_blank" %>
+		<%= link_to "De Novo Variants", "https://drive.google.com/open?id=1gVUb6ikEpiNbBsREpAWrvToWCBsPiKTv", class: "pdf-doc dropdown-item", target: "_blank" %>
+
+    <div class="dropdown-header">About Your Account</div>
+
+    <%= link_to "My Profile", {controller: :profile, action: :show}, class: "dropdown-item" %>
+
+    <div class="dropdown-divider"></div>
+
+    <%= link_to "MSSNG Portal Quickstart", "/assets/documents/db6/MSSNG_PORTAL_QUICKSTART_2019.pdf", class: "pdf-doc dropdown-item", target: "_blank" %>
 		<%= mail_to dt('mail.address'), dt('mail.nav'), html_options = {subject: dt('mail.subject'), body: dt('mail.body', email: dt('mail.address')), class: "dropdown-item"} %>
   </div>
 </li>
 
 <li class="nav-item dropdown">
-  <a class="nav-link dropdown-toggle" href="#" id="profileDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><%= current_user.email.split('@').first %></a>
-  <div class="dropdown-menu" aria-labelledby="profileDropdown">
-    <%= link_to dt('navbar.signout'), signout_path, class: "dropdown-item" %>
-  </div>
+  <%= link_to(
+    # octicon("sign-out"),
+    dt('navbar.signout'),
+    signout_path,
+    class: "nav-link",
+    rel: 'popover',
+    data: {
+      content: "Click here to sign out from #{current_user.email}",
+      trigger: 'hover',
+      toggle: 'popover',
+      placement: 'bottom',
+    },
+  ) %>
 </li>

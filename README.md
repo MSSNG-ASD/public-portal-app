@@ -1,5 +1,9 @@
 # MSSNG Portal
 
+| Compatible Dataset Version | Status |
+| -------------------------- | ------ |
+| DB6                        | Active Development |
+
 ## Contributing
 
 If you are interested in contributing to the Portal Service, we encourage you to
@@ -17,3 +21,4 @@ your change. You can do this by [creating a new issue](https://github.com/MSSNG-
 
 Please note that you may need to request the access to the database. For more
 information on how you can request the data, please visit https://research.mss.ng.
+

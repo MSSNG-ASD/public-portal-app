@@ -10,9 +10,32 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20180411132918) do
+ActiveRecord::Schema.define(version: 20190716144900) do
 
-  create_table "searches", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8" do |t|
+  create_table "BigQueryJobStats", id: :string, limit: 36, force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=latin1" do |t|
+    t.string "user_id", null: false
+    t.string "job_group_id", null: false
+    t.bigint "created_at", null: false
+    t.bigint "ended_at", null: false
+    t.datetime "recorded_at", null: false
+    t.bigint "started_at", null: false
+    t.string "query_cache", null: false
+    t.bigint "query_total_bytes_billed", null: false
+    t.bigint "query_total_bytes_processed", null: false
+    t.index ["user_id", "job_group_id"], name: "index_BigQueryJobStats_on_user_id_and_job_group_id"
+    t.index ["user_id"], name: "index_BigQueryJobStats_on_user_id"
+  end
+
+  create_table "ReleaseNoteReadReceipts", id: :string, limit: 36, force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=latin1" do |t|
+    t.string "user_id", null: false
+    t.string "entry_id", null: false
+    t.datetime "created_at"
+    t.index ["created_at"], name: "index_ReleaseNoteReadReceipts_on_created_at"
+    t.index ["user_id", "entry_id"], name: "index_ReleaseNoteReadReceipts_on_user_id_and_entry_id", unique: true
+    t.index ["user_id"], name: "index_ReleaseNoteReadReceipts_on_user_id"
+  end
+
+  create_table "searches", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4" do |t|
     t.bigint "user_id"
     t.string "name"
     t.string "type"
@@ -23,7 +46,7 @@ ActiveRecord::Schema.define(version: 20180411132918) do
     t.index ["user_id"], name: "index_searches_on_user_id"
   end
 
-  create_table "users", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8" do |t|
+  create_table "users", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4" do |t|
     t.string "email", default: "", null: false
     t.string "encrypted_password", default: "", null: false
     t.string "reset_password_token"

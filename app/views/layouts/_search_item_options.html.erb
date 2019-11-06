@@ -5,15 +5,14 @@
     <%= content_tag(:span, "", :class => "fa fa-caret-up to-hide") %>
   </button>
   <div class="dropdown-menu">
-    <a class="dropdown-item" href="<%= annotation_path(variant.annotation_id.strip) %>">
-      See the annotation <span class="badge badge-secondary"><%= shorten(variant.annotation_id.strip, 30) %></span>
+    <a class="dropdown-item" href="<%= annotation_path(variant.annotation_id.strip, source: variant.source.nil? ? nil : variant.source.split(',')[0]) %>">
+      See the annotation for <span class="badge badge-secondary"><%= shorten(variant.annotation_id.strip, 30) %></span>
     </a>
     <%= link_to(
       'Open in the Read Viewer',
       igv_subject_sample_path(
         variant.sample_id,
         locus: "#{variant.reference_name}:#{variant.start.to_i - 25}-#{variant.end.to_i + 25}",
-        call_set_id: variant.call_call_set_id,
         platform: variant.platform
       ),
       :class => 'dropdown-item',
@@ -23,7 +22,7 @@
       <a href="<%= variant.beacon_network_url %>" class="dropdown-item" style="border-top: 1px solid #eee" target="_blank">
         Search for similar variants on the Beacon Network*
         <span style="display: block; font-size: 0.8rem; color: #666">
-        Beacon Network is using the 1-based coordinate counting system.
+        Beacon Network uses the 1-based coordinate system.
         </span>
       </a>
     <% end %>

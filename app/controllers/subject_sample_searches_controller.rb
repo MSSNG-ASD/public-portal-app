@@ -58,7 +58,7 @@ class SubjectSampleSearchesController < ApplicationController
     @subject_sample_search = SubjectSampleSearch.new(secure_params)
     @subject_sample_search.user = @user
     if @subject_sample_search.save
-      flash[:notice] = dt("notices.create", model: @subject_sample_search.name)
+      # flash[:notice] = dt("notices.create", model: @subject_sample_search.name)
     end
    respond_with(@subject_sample_search)
    # respond_with(@subject_sample_search, :location => subject_sample_searches_url)
@@ -70,7 +70,7 @@ class SubjectSampleSearchesController < ApplicationController
   # PUT  /subject_sample_searches/<subject_sample_search>
   def update
     if @subject_sample_search.update(secure_params)
-      flash[:notice] = dt("notices.update", model: @subject_sample_search.name)
+      # flash[:notice] = dt("notices.update", model: @subject_sample_search.name)
     end
     if secure_params.include?('saved')
       respond_with(@subject_sample_search, location: search_subject_sample_searches_url)
@@ -99,7 +99,7 @@ class SubjectSampleSearchesController < ApplicationController
     def set_user
       @user = current_user
     end
-    
+
     def secure_params
       params.require(:subject_sample_search).permit(:saved, :search, :name, :dna_source, :platform, :stringy_index_ids, :stringy_submitted_ids)
     end

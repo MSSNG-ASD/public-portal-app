@@ -33,6 +33,7 @@ class TriosController < ApplicationController
   #
   # GET /trios/<trio>
   def show
+    @requested_timestamp = Time.now
     respond_with(@trio) do |format|
       format.html {
         @trio.limited = true
@@ -41,7 +42,9 @@ class TriosController < ApplicationController
         response.headers['Content-Disposition'] = "'attachment; filename=\"#{@trio.name.parameterize(separator: "_")}.xlsx\""
       }
       format.text {
-        send_data render_to_string, filename: @trio.name.parameterize(separator: "_") + '.txt', :disposition => 'attachment', :layout => false
+        if params['no_dl'].nil?
+          send_data render_to_string, filename: @trio.name.parameterize(separator: "_") + '.tsv', :disposition => 'attachment', :layout => false
+        end
       }
     end
   end
@@ -68,7 +71,7 @@ class TriosController < ApplicationController
     @trio = Trio.new(secure_params)
     @trio.user = @user
     if @trio.save
-      flash[:notice] = dt("notices.create", :model => @trio.name)
+      # flash[:notice] = dt("notices.create", :model => @trio.name)
     end
     respond_with(@trio)
   end
@@ -79,13 +82,13 @@ class TriosController < ApplicationController
   # PUT  /trios/<trio>
   def update
     if @trio.update(secure_params)
-      flash[:notice] = dt("notices.update", :model => @trio.name)
+      # flash[:notice] = dt("notices.update", :model => @trio.name)
     end
-    if secure_params.include?('saved')
-      respond_with(@trio, :location => search_trios_url)
-    else
+    # if secure_params.include?('saved')
+    #   respond_with(@trio, :location => search_trios_url)
+    # else
       respond_with(@trio)
-    end
+    # end
   end
 
   # REST-fully destroys a Trio

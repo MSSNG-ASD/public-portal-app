@@ -1,0 +1,16 @@
+<table id="<%= table_id %>" class="table table-horizontal table-bordered">
+  <thead>
+    <tr>
+      <% kv.keys.each do | k | %>
+        <th class="dt-key" scope="col"><%= k %></th>
+      <% end %>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <% kv.keys.each do | k | %>
+        <td data-test-key="<%= k %>" class="dt-value"><%= kv[k] %></td>
+      <% end %>
+    </tr>
+  </tbody>
+</table>

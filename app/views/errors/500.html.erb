@@ -1,38 +1,55 @@
-<style>
-body[data-ctrl="errors"] main .container {
-  max-width: 640px;
-}
-</style>
+<h1 style="font-weight: 700">
+  <% if overriding_title.nil? %>
+    <% if @is_critical %>Critical Error<% else %>Unexpected Error<% end %>
+  <% else %>
+    <%= overriding_title %>
+  <% end %>
+</h1>
 
-<h1 style="font-weight: 700">Unexpected Error</h1>
 <p>We're sorry, but something went wrong.</p>
 
-<% unless @exception.message.nil? %>
-  <div class="details" style="background-color: white; padding: 20px; margin: 20px 0; box-shadow: rgba(0,0,0,0.1) 0 5px 10px;">
-    <table class="table" style="border: 1px solid #ddd;">
+<% unless @exception.nil? or @exception.message.nil? %>
+  <%= render partial: 'layouts/error_details_style' %>
+
+  <div class="error-details">
+    <% human_readable_date = timestamp.strftime "%B %d, %Y" %>
+    <% human_readable_time = timestamp.strftime "%I:%M:%S %P %Z" %>
+    <% simplified_timestamp = timestamp.strftime "%Y-%m-%d %H:%M:%S" %>
+
+    <div class="event-metadata" style="background-color: <% if @is_critical %>#cc0000<% else %>#215498<% end %>">
+      <time datetime="<%= timestamp.iso8601 %>" title="<%= simplified_timestamp %>">
+        <%= human_readable_date %>
+        at <%= human_readable_time %>
+      </time>
+    </div>
+
+    <% if !overriding_message.nil? %>
+      <div class="overriding-message">
+        <p><%= overriding_message %></p>
+        <div style="text-align: center;"><a style="cursor: pointer" data-more="..." data-less="↑ Hide the detail"></a></div>
+      </div>
+    <% end %>
+
+    <table class="table" style="<% if !overriding_message.nil? %>display: none;<% end %>">
       <tr>
         <th>Reference ID</th>
-        <td style="font-family: 'Roboto Mono', monospace;"><%= reference_id %></td>
+        <td><%= reference_id %></td>
       </tr>
       <tr>
-        <th>Occurred on</th>
-        <% human_readable_date = timestamp.strftime "%B %d, %Y" %>
-        <% human_readable_time = timestamp.strftime "%I:%M:%S %P %Z" %>
-        <% simplified_timestamp = timestamp.strftime "%Y-%m-%d %H:%M:%S" %>
-        <td>
-          <time datetime="<%= timestamp.iso8601 %>" title="<%= simplified_timestamp %>">
-            <%= human_readable_date %>
-            at <%= human_readable_time %>
-          </time>
-        </td>
+        <th>Type</th>
+        <td><%= @exception.class %></td>
+      </tr>
+      <tr>
+        <th>Reason</th>
+        <td><%= @exception.message %></td>
       </tr>
     </table>
-
-    <h5 class="card-title" style="border-top: 1px solid #ddd; border-bottom: 1px solid #ddd; padding: 10px">Reason</h5>
-
-    <p class="card-text" style="font-family: 'Roboto Mono', monospace; padding: 10px 0 10px 10px;">
-      <%= @exception.message %>
-    </p>
+    <% if @is_critical %>
+      <div style="font-style: italic; font-size: 1.1rem; text-align: center; border-top: 1px dashed #ddd; padding-top: 20px;">
+        The service has initiated the recovery process. Please
+        try again in approximately <b>one minute</b>.
+      </div>
+    <% end %>
   </div>
 <% end %>
 
@@ -40,3 +57,35 @@ body[data-ctrl="errors"] main .container {
   We track these errors automatically, but if the problem persists, feel free to
   <a href="mailto:<%= recipient_email %>?<%= error_email_options %>">contact us</a>.
 </p>
+
+<% if !overriding_message.nil? %>
+<script>
+window.addEventListener('load', function() {
+  var showDetail = false;
+  var toggleButton = document.querySelector('.overriding-message a');
+  var detailBox = document.querySelector('.error-details .table')
+
+  function toggleDetailBox() {
+    if (showDetail) {
+      toggleButton.innerHTML = toggleButton.getAttribute('data-less');
+      detailBox.style.display = '';  // default styling
+    } else {
+      toggleButton.innerHTML = toggleButton.getAttribute('data-more');
+      detailBox.style.display = 'none';
+    }
+  }
+
+  toggleButton.addEventListener('click', function(e) {
+    e.preventDefault();
+    showDetail = !showDetail;
+    toggleDetailBox();
+  });
+
+  toggleButton.addEventListener('mousedown', function(e) {
+    e.preventDefault();
+  });
+
+  toggleDetailBox();
+});
+</script>
+<% end %>

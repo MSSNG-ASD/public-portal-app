@@ -1,0 +1,19 @@
+<div class="data-controls">
+  <% if search.variants.count > 0 and search.saved != true %>
+    <%= simple_form_for search, html: {class: 'save-form form-inline'} do |f| %>
+      <%= f.input :saved, as: :hidden, input_html: { :value => true } %>
+      <%= f.input :name, as: :hidden %>
+      <%= f.button :submit, :class => 'btn btn-primary', :value => 'Save this query' %>
+    <% end %>
+  <% else %>
+    <%= link_to '<span class="fa fa-trash"></span>'.html_safe, delete_search_url,
+                title: 'Delete this query',
+                class: 'btn btn-danger',
+                method: :delete,
+                data: {
+                    confirm: dt("#{controller_name}.#{action_name}.confirm", model: search.name)
+                } %>
+  <% end %>
+
+  <%= link_to 'Edit this query'.html_safe, edit_search_url, class: "btn btn-#{ search.saved ? 'primary' : 'secondary' } edit-button", title: 'Edit this query' %>
+</div>

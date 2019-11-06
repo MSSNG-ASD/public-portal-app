@@ -19,7 +19,7 @@ class SubjectSampleSearch < Search
     @subjects ||= begin
       if index_ids.present?
         sql = "select #{Subject.attrs.join(', ')} from #{Subject.table} where #{Subject.primary_key} IN ('#{index_ids.join('\', \'')}')"
-        records = BigQuery.new(user.credentials).exec_query(sql).map {|record| Subject.new(record)}
+        records = BigQuery.new(user.credentials).exec_query(sql).all.map {|record| Subject.new(record)}
         @subjects = records.map {|subject| {id: subject.id, name: subject.name}}
       else
         @subjects = []
@@ -31,7 +31,7 @@ class SubjectSampleSearch < Search
     @samples ||= begin
       if submitted_ids.present?
         sql = "select #{SubjectSample.attrs.join(', ')} from #{SubjectSample.table} where #{SubjectSample.primary_key} IN ('#{submitted_ids.join('\', \'')}')"
-        records = BigQuery.new(user.credentials).exec_query(sql).map {|record| SubjectSample.new(record)}
+        records = BigQuery.new(user.credentials).exec_query(sql).all.map {|record| SubjectSample.new(record)}
         @samples = records.map {|sample| {id: sample.id, name: sample.name}}
       else
         @samples = []
@@ -49,10 +49,9 @@ class SubjectSampleSearch < Search
   end
 
   def results
-    @results ||= BigQuery.new(user.credentials).exec_query(sql).map do |record|
-      subject = SubjectSample.new(record)
-      subject.sequence = SequencedSample.where(user, "call_call_set_name = '#{subject.submittedid}'").first
-      subject
+    # FIXME Removed as it is apparently not used or deprecated.
+    @results ||= BigQuery.new(user.credentials).exec_query(sql).all.map do |record|
+      SubjectSample.new(record)
     end
   end
 
@@ -61,14 +60,13 @@ private
   def set_search
     if search.present?
       self.name = name || search
-      both = []
+      sample_ids = []
       search.split(";").each do |sample_query|
-        sample = SubjectSample.find(user, sample_query)
-        if sample
-          both << sample.submittedid
+        SubjectSample.find(user, sample_query).each do |sample|
+          sample_ids << sample.submittedid
         end
       end
-      self.submitted_ids = both.empty? ? [] : both.flatten.uniq.compact
+      self.submitted_ids = sample_ids
     end
 
   end

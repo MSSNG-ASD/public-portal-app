@@ -5,11 +5,12 @@ class SubjectSample
   include AugmentedVariant
 
   def self.table
-    @@table = "`#{Rails.configuration.x.query['dataset_id']}.#{Rails.configuration.x.query['subject_samples']}`"
+    search_config = Rails.configuration.x.query['db6']
+    @@table = "`#{search_config['project_id']}.#{search_config['tables']['subject_samples']}`"
   end
 
   def self.primary_key
-    @@primary_key = Rails.configuration.x.query['subject_sample_attrs'].first
+    @@primary_key = self.attrs.first
   end
 
   def self.attrs
@@ -17,18 +18,23 @@ class SubjectSample
   end
 
   def self.search(user, name = nil)
-    sql = "select #{attrs.join(', ')} from #{table} where #{primary_key} like '#{name}%' order by #{primary_key} limit 10"
-    BigQuery.new(user.credentials).exec_query(sql).map {|record| SubjectSample.new(record)}
+    sql = "select #{attrs.join(', ')} from #{table} where #{primary_key} like '#{name}%' order by #{primary_key}"
+    BigQuery.new(user.credentials).exec_query(sql).all.map {|record| SubjectSample.new(record)}
   end
 
   def self.find(user, id)
-    sql = "select #{attrs.join(', ')} from #{table} where #{primary_key} = '#{id}'"
-    BigQuery.new(user.credentials).exec_query(sql).map {|record| SubjectSample.new(record)}.first
+    sql = "select #{attrs.join(', ')} from #{table} where #{primary_key} = '#{id}' ORDER BY #{self.attrs[1]}"
+    BigQuery.new(user.credentials).exec_query(sql).all.map {|record| SubjectSample.new(record)}
+  end
+
+  def self.find_one_by_sample_id(user, id)
+    sql = "select #{attrs.join(', ')} from #{table} where submittedid = '#{id}' ORDER BY #{self.attrs[1]}"
+    BigQuery.new(user.credentials).exec_query(sql).all.map {|record| SubjectSample.new(record)}.first
   end
 
   def self.where(user, clause)
     sql = "select #{attrs.join(', ')} from #{table} where #{clause}"
-    BigQuery.new(user.credentials).exec_query(sql).map {|record| SubjectSample.new(record)}
+    BigQuery.new(user.credentials).exec_query(sql).all.map {|record| SubjectSample.new(record)}
   end
 
   # getter/setter methods for result columns
@@ -36,9 +42,6 @@ class SubjectSample
 
   # getter/setter methods for measures
   attr_accessor :measures
-
-  # getter/setter methods for sequence
-  attr_accessor :sequence
 
   # Computed, derived columns
   def id

@@ -5,7 +5,7 @@ wb.add_worksheet(name: "Variants") do |sheet|
 		variant_columns = []
 		[@trio.user.selected_preferences - ['igv']].flatten.each do |column|
 			if column.eql?('inheritance')
-				variant_columns << interpretted_inheritance(variant.reference_name, variant.sex, variant.inheritance)
+				variant_columns << "#{variant.inheritance}:#{interpreted_inheritance(variant.reference_name, variant.sex, variant.inheritance, variant.start)}"
 			elsif column.eql?('affection')
 				variant_columns << variant.interpretted_affection
 			else

@@ -1,25 +1,29 @@
 <div class="row">
   <div class="col">
-    <h1><%= dt("#{controller_name}.#{action_name}.title", model: dt("#{controller_name}.#{action_name}.model"), instance: @gene_search.name) %></h1>
+    <h1 class="title"><%= dt("#{controller_name}.#{action_name}.title", model: dt("#{controller_name}.#{action_name}.model"), instance: @gene_search.name).html_safe %></h1>
   </div>
 </div>
 <div class="row">
-  <div class="col">
+  <div class="col-md-3 query-tools">
     <%= simple_form_for @gene_search do |f| %>
       <div class="form-inputs">
-    		<%= f.input :name, label: GeneSearch.human_attribute_name(:saved_name), autofocus: true %>
-    		<%= f.input :saved, as: :hidden, input_html: { value: true } %>
-    	</div>
-      <div class="form-actions">
+        <%= f.input :name, label: GeneSearch.human_attribute_name(:saved_name), autofocus: true %>
+        <%= f.input :saved, as: :hidden, input_html: { value: true } %>
+      </div>
+
+      <div class="form-actions primary">
         <%= f.button :submit, class: 'btn btn-primary', value: dt("#{controller_name}.#{action_name}.submit", model: dt("#{controller_name}.#{action_name}.model")) %>
+      </div>
+
+      <div class="form-actions modifiers">
+        You can also...
+        <%= link_to 'Edit this query', edit_gene_search_path(@gene_search), class: 'btn btn-secondary' %>
+        <%= link_to 'Delete this query', gene_search_path(@gene_search), class: 'btn btn-danger', method: :delete, data: { confirm: dt("#{controller_name}.#{action_name}.confirm", model: @gene_search.name) } %>
       </div>
     <% end %>
   </div>
-</div>
-<%= render partial: "gene_search", locals: { gene_search: @gene_search } %>
-<div class="row">
-  <div class="col form-actions">
-		<%= link_to dt('actions.edit', model: GeneSearch.model_name.human), edit_gene_search_path(@gene_search), class: 'btn btn-primary' %>
-		<%= link_to dt("actions.destroy", model: GeneSearch.model_name.human), gene_search_path(@gene_search), class: 'btn btn-danger', method: :delete, data: { confirm: dt("#{controller_name}.#{action_name}.confirm", model: @gene_search.name) } %>
+
+  <div class="col-md-9 query-result">
+    <%= render partial: "gene_search", locals: { gene_search: @gene_search } %>
   </div>
 </div>

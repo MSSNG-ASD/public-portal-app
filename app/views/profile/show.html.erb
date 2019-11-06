@@ -1,0 +1,106 @@
+<% is_dev_env = ENV['RAILS_ENV'] == 'development'%>
+
+<div class="row">
+  <div class="col">
+    <h1 class="title">
+      <span class="secondary">Logged in as</span>
+      <%= @user.email %></h1>
+  </div>
+</div>
+<div class="row">
+  <div class="col<%= is_dev_env ? '-md-8' : '' %>">
+    <h2>Query Usage via the Portal Service</h2>
+
+    <p>
+      Here is the summary on how much data you have been using so far.
+    </p>
+
+    <table class="table">
+      <tbody>
+        <tr>
+          <th></th>
+          <th>Data Billed</th>
+          <th>Estimated Cost (USD)</th>
+        </tr>
+        <tr>
+          <td style="text-align: right"><b><%= @last_month_date %> → <%= @today %></b></td>
+          <td>
+            <code><%= @this_month_total_bytes_billed %></code> bytes
+            or <code><%= "%.3f" % @this_month_total_terabytes_billed.ceil(3) %></code> TB
+          </td>
+          <td>$<%= "%.2f" % (@this_month_total_terabytes_billed * @billing_rate_per_tb).ceil(2) %></td>
+        </tr>
+        <tr>
+          <td style="text-align: right"><b>Total</b></td>
+          <td>
+            <code><%= @total_bytes_billed %></code> bytes
+            or <code><%= "%.3f" % @total_terabytes_billed.ceil(3) %></code> TB
+          </td>
+          <td>$<%= "%.2f" % (@total_terabytes_billed * @billing_rate_per_tb).ceil(2) %></td>
+        </tr>
+      </tbody>
+    </table>
+
+    <h3>Most Recent Queries</h3>
+
+    <% if @usage.nil? or @usage.empty? %>
+      <p>We don't have any record as you haven't successfully made a query.</p>
+    <% else %>
+      <p>
+        Here is the list of the most recent <%= @numberOfUsageRecords %> queries,
+        including additional queries to provide more information to the result of
+        your search queries.
+      </p>
+
+      <table class="table table-striped">
+        <tbody>
+          <tr>
+            <th style="width: 240px;">When</th>
+            <th style="text-align: center; width: 100px;">Cache Used?</th>
+            <th style="text-align: right">Data Read (MB)</th>
+            <th style="text-align: right">Data Billed (MB)</th>
+            <th style="text-align: right">Total Runtime</th>
+          </tr>
+          <% seen_timestamp = nil %>
+          <% @usage.each do | job | %>
+            <% cache_hit = job.query_cache == 'hit' %>
+            <% show_timestamp = seen_timestamp != job.recorded_at%>
+            <% actual_ts_text = show_timestamp ? job.recorded_at : '' %>
+            <% actual_ts_hint = show_timestamp ? "#{time_ago_in_words(job.recorded_at)} ago" : '' %>
+            <tr>
+              <td title="<%= actual_ts_hint %>"><%= actual_ts_text %></td>
+              <td style="text-align: center"><%= cache_hit ? 'Yes' : '<b style="color: red">No</b>'.html_safe %></td>
+              <td style="text-align: right"><%= cache_hit ? '-' : "%.2f GB" % (job.query_total_bytes_billed / 1024.0 / 1024 / 1024) %></td>
+              <td style="text-align: right"><%= cache_hit ? '-' : "%.2f GB" % (job.query_total_bytes_processed / 1024.0 / 1024 / 1024) %></td>
+              <td style="text-align: right"><%= "%.3f" % ((job.ended_at * 1.0 - job.started_at) / 1000) %> seconds</td>
+            </tr>
+            <% seen_timestamp = job.recorded_at %>
+          <% end %>
+        </tbody>
+      </table>
+    <% end %>
+  </div>
+
+  <% if is_dev_env %>
+    <div class="col-md-4">
+      <h2>Access Token</h2>
+
+      <% ttl_in_hour = (@ttl / 60 / 60).to_i %>
+
+      <p>
+        The portal service provides a set of APIs which are reachable as you by the access token below:
+      </p>
+
+      <blockquote><code><%= @jwt %></code></blockquote>
+
+      <p>
+        However, this auto-generated token will be valid only for <%= ttl_in_hour %> hour<%= ttl_in_hour == 1 ? '' : 's' %> from now.
+      </p>
+
+      <div class="alert alert-warning" role="alert">
+        Despite of the token expiration, it is a common security practice that you <b>must not</b> share the access token to anyone.
+      </div>
+
+    </div>
+  <% end %>
+</div>

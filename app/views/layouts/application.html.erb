@@ -1,39 +1,146 @@
 <%# navigation styled for Bootstrap 4.0 %>
 <%# Pre-process the local variables %>
-<% body_class_public_mode = "inverse" %>
-<% body_class_private_mode = "not-inverse" %>
-<% if controller_name.eql?('visitors') %>
-  <% if action_name.eql?('publications') %>
-    <% body_class = body_class_private_mode %>
-  <% else %>
-    <% body_class = body_class_public_mode %>
-  <% end %>
-<% else %>
-  <% body_class = body_class_private_mode %>
-<% end %>
+<%
+  body_class_public_mode = "inverse"
+  body_class_private_mode = "not-inverse"
+
+  # By default, hide the release note from the visitor.
+  release_note = latest_release_note
+
+  if release_note.nil? and !params[:show_rn].nil?
+    release_note = release_notes.first
+  end
+
+  if controller_name.eql?('visitors')
+    if ['about', 'index'].include? action_name
+      body_class = body_class_public_mode
+    else
+      body_class = body_class_private_mode
+    end
+
+    if action_name.eql?('change_logs')
+      release_note = nil
+    end
+  else
+    body_class = body_class_private_mode
+  end
+%>
 <%# The Layout %>
 <!doctype html>
 <html>
   <head>
     <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no, shrink-to-fit=no">
     <title><%= content_for?(:title) ? yield(:title) : "MSSNG" %></title>
     <meta name="description" content="<%= content_for?(:description) ? yield(:description) : "MSSNG" %>">
+    <meta name="release-channel" content="<%= ENV['DEPLOYMENT_ENVIRONMENT'] %>">
     <%= csrf_meta_tags %>
     <%= stylesheet_link_tag    'application', media: 'all' %>
     <%= javascript_include_tag 'application' %>
   </head>
   <body class="<%= body_class %>" data-ctrl="<%= controller_name %>" data-action="<%= action_name %>">
-    <header>
-      <%= render 'layouts/navigation' %>
-    </header>
-    <main role="main">
-      <div class="container">
-       <%= render 'layouts/messages' %>
-       <%= yield %>
+    <div class="print-only print-receipt">
+      <h2>The MSSNG Research Portal, a Project By Autism Speaks</h2>
+      <div class="print-metadata">
+        <div>User: <code><%= current_user.nil? ? 'Anonymous User' : current_user.email %></code></div>
+        <div>Request ID: <code><%= request.request_id %></code></div>
       </div>
-    </main>
-    <%= render 'layouts/footer' %>
+    </div>
+    <div class="flex-container">
+      <header>
+        <%= render 'layouts/navigation' %>
+      </header>
+      <main role="main">
+        <div class="main-container container-fluid">
+        <%= render 'layouts/messages' %>
+        <%= yield %>
+        </div>
+      </main>
+      <%= render 'layouts/footer' %>
+    </div>
+
+    <!-- Loading Indicator -->
+    <div id="loading-indicator-container">
+      <div id="loading-indicator-box">
+        <div id="loading-indicator">
+          <div class="dot a"></div>
+          <div class="dot b"></div>
+          <div class="dot c"></div>
+          <div class="dot d"></div>
+        </div>
+        <div>Loading</div>
+      </div>
+    </div>
+
+    <% if !release_note.nil? %>
+      <div id="release-note" class="modal" tabindex="-1" role="dialog">
+        <div class="modal-dialog modal-lg modal-dialog-centered" role="document">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title">Latest Update</h5>
+              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+              </button>
+            </div>
+            <div class="modal-body">
+              <%= render_md_to_html(release_note[:file_path]).html_safe %>
+            </div>
+          </div>
+        </div>
+      </div>
+    <% end %>
+
+    <script>
+      var releaseNote = <% if release_note.nil? %>null<% else %><%= release_note.to_json.html_safe %><% end %>;
+
+      <% if !release_note.nil? %>
+        $('#release-note')
+          .modal({
+            backdrop: true,
+            show: true,
+          })
+          .on('hide.bs.modal', function (event) {
+            fetch('/release_note_read_receipts/' + releaseNote.entry_id, {method: 'PUT'})
+          })
+        ;
+      <% end %>
+
+      function setAppToInflighState() {
+        $('form, input, select, button').attr('readonly', true);
+        $('#loading-indicator-container').removeClass('disabled');
+        setTimeout(() => {
+          $('#loading-indicator').addClass('slow');
+          console.log('This is taking longer than expected.');
+        }, 5000)
+      }
+
+      function setAppToStandbyState() {
+        $('form, input, select, button').removeAttr('readonly');
+        $('#loading-indicator-container').addClass('disabled');
+      }
+
+      $('form').on('submit', function (e) {
+        if (!$(e.currentTarget).hasClass('no-loading-indicator')) {
+          setAppToInflighState();
+        }
+      });
+
+      $(window).on('load', function () {
+        setAppToStandbyState();
+      });
+
+      $(window).on('exit', function () {
+        setAppToInflighState();
+      });
+
+      $('a.dataset-opener').on('click', function () {
+        setAppToInflighState();
+      });
+
+      window.onunload = function() { console.warn('unload'); };
+    </script>
+
+    <!-- Google Analytics -->
     <script>
       (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
       (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),

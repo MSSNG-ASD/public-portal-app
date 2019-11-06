@@ -1,17 +1,7 @@
-<%= [
-AnnotatedVariant.human_attribute_name(:familyid),
-AnnotatedVariant.human_attribute_name(:sample_id),
-AnnotatedVariant.human_attribute_name(:fatherid),
-AnnotatedVariant.human_attribute_name(:motherid),
-AnnotatedVariant.human_attribute_name(:sex),
-AnnotatedVariant.human_attribute_name(:affection),
-AnnotatedVariant.human_attribute_name(:reference_name),
-AnnotatedVariant.human_attribute_name(:start),
-AnnotatedVariant.human_attribute_name(:end),
-AnnotatedVariant.human_attribute_name(:reference_bases),
-AnnotatedVariant.human_attribute_name(:allele1),
-AnnotatedVariant.human_attribute_name(:allele2),
-].join("\t") %>
-<% @trio.variants.each do |variant| %>
-<%= [variant.plink_family, variant.sample_id, variant.plink_father, variant.plink_mother, variant.plink_gender, variant.plink_affection, variant.reference_name, variant.start, variant.end, variant.reference_bases, variant.allele1, variant.allele2].join("\t") %>
-<% end %>
+<%= render(
+        partial: "layouts/common_exported_data.tsv",
+        locals: {
+            # search_class: Trio,
+            search: @trio,
+        }
+    ) %>

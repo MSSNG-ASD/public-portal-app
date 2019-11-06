@@ -1,6 +1,6 @@
 <div class="row">
   <div class="col">
-    <h1><%= dt("#{controller_name}.#{action_name}.title", :model => dt("#{controller_name}.#{action_name}.model"), :instance => @trio.name) %></h1>
+    <h1 class="title"><%= dt("#{controller_name}.#{action_name}.title", :model => dt("#{controller_name}.#{action_name}.model"), :instance => @trio.name).html_safe %></h1>
   </div>
 </div>
 

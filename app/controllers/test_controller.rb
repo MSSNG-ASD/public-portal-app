@@ -6,6 +6,10 @@ class TestController < ApplicationController
   rescue_from JWT::VerificationError, with: :_handle_exception
   rescue_from Error, with: :_handle_exception
 
+  def ping
+    render plain: '{"result": "ok"}'
+  end
+
   def auth
     user = _get_user
 
@@ -36,10 +40,11 @@ class TestController < ApplicationController
       effects_with_impacts: '1',
       a1000g_freq_max: '1',
       gnomad_genome_freq_max: '1',
-      mssng_freq_max: '1',
+      max_int_freq: '1',
       paths: '1',
       sex: '1',
       platform: '1',
+      clinvar_sig_simple: '1',
       # igv: '1',
       # annotation_id: '1',
       category: '0',
@@ -47,7 +52,6 @@ class TestController < ApplicationController
       gnomad_exome_freq_max: '0',
       exac_freq_max: '0',
       call_filter: '0',
-      inherited_quality: '0',
       comp_het_rec: '0',
       entrez_id: '0',
       genotype_likelihood: '0',
@@ -56,7 +60,6 @@ class TestController < ApplicationController
       cgd_disease: '0',
       cgd_inheritance: '0',
       omim_phenotype: '0',
-      call_phaseset: '0',
       effect_priority: '0',
       typeseq_priority: '0',
       affection: '0',
@@ -76,14 +79,27 @@ class TestController < ApplicationController
     user.trios.saved.destroy_all
     user.trios.not_saved.destroy_all
 
+    # ReleaseNoteReadReceipt.where(user_id: user.id).destroy_all
+
     render plain: '{"result": "ok"}'
   rescue Signet::AuthorizationError
     render plain: '{"result": "test_credential_expired"}', status: 418
   end
 
+  ##
+  # Trigger a random RuntimeError.
   def trigger_sample_error
     # This endpoint is for testing only.
-    raise RuntimeError, 'Sample Error for Testing'
+    raise RuntimeError, 'Sample RuntimeError Error for Testing'
+  end
+
+  ##
+  # Trigger a random NoMemoryError.
+  #
+  # This is very dangerous and must not be triggered on the production environment.
+  def trigger_nuclear_error
+    # This endpoint is for testing only.
+    raise NoMemoryError, 'Sample NoMemoryError Error for Testing'
   end
 
   private

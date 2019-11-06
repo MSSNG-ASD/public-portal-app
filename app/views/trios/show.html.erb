@@ -1,13 +1,26 @@
-<div class="row">
+<% search = @trio %>
+
+<div class="row" data-count="<%= search.variants.count %>">
   <div class="col">
-    <h1><%= dt("#{controller_name}.#{action_name}.title", :model => dt("#{controller_name}.#{action_name}.model"), :instance => @trio.name) %></h1>
+    <h1 class="title"><%= dt("#{controller_name}.#{action_name}.title", :model => dt("#{controller_name}.#{action_name}.model"), :instance => search.name).html_safe %></h1>
   </div>
 </div>
-<%= render :partial => "users/preferences_modal", :locals => { :user => @trio.user } %>
-<%= render :partial => "variants", :locals => { :trio => @trio } %>
-<div class="row">
-  <div class="col form-actions">
-		<%= link_to dt('actions.edit', :model => Trio.model_name.human), edit_trio_path(@trio), :class => 'btn btn-primary' %>
-		<%= link_to dt("actions.destroy", :model => Trio.model_name.human), trio_path(@trio), :class => 'btn btn-danger', :method => :delete, :data => { :confirm => dt("#{controller_name}.#{action_name}.confirm", :model => @trio.name) } %>
+
+<%= render :partial => "users/preferences_modal", :locals => { :user => search.user } %>
+<%= render :partial => "variants", :locals => { :trio => search } %>
+
+<% if ENV['UI_SHOW_EXECUTION_TIME'] == '1' %>
+  <div class="row rendering-time">
+    <% primary_job_stat = search.primary_job.stat %>
+    <% query_time = ((primary_job_stat['endTime'].to_i * 1.0 - primary_job_stat['creationTime'].to_i) / 1000).round(3) %>
+    <% rendering_time = (Time.now - @requested_timestamp).round(3) %>
+    <p><b><%= query_time %></b> sec to query and <b><%= rendering_time %></b> sec to render</p>
   </div>
-</div>
+<% end %>
+
+<!--<div class="row">-->
+<!--  <div class="col form-actions">-->
+		<%#= link_to dt('actions.edit', :model => Trio.model_name.human), edit_trio_path(@trio), :class => 'btn btn-primary' %>
+		<%#= link_to dt("actions.destroy", :model => Trio.model_name.human), trio_path(@trio), :class => 'btn btn-danger', :method => :delete, :data => { :confirm => dt("#{controller_name}.#{action_name}.confirm", :model => @trio.name) } %>
+<!--  </div>-->
+<!--</div>-->

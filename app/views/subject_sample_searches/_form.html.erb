@@ -7,7 +7,15 @@
     <%= f.input :platform, collection: ["Illumina HiSeq", "Illumina HiSeqX", "Complete Genomics"], include_blank: "All Platforms" %>
   </div>
   <div class="form-actions">
-    <%= link_to dt('actions.cancel'), search_subject_sample_searches_path, class: 'btn btn-default' %>
-    <%= f.button :submit, class: 'btn btn-primary', value: dt("#{controller_name}.#{action_name}.submit", model: dt("#{controller_name}.#{action_name}.model")) %>
+    <%= f.button(
+      :submit,
+      class: 'btn btn-primary',
+      value: dt(
+        "#{controller_name}.#{action_name}.submit",
+        model: dt("#{controller_name}.#{action_name}.model")
+      )
+    ) %>
+
+    <%= link_to dt('actions.cancel'), (@subject_sample_search.id ? @subject_sample_search : search_subject_sample_searches_path), class: 'btn' %>
   </div>
 <% end %>

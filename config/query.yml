@@ -10,30 +10,37 @@ default: &default
   ref_gene: refgene
   gene_coordinate: gene_coordinate
 
-  ## Various Google Cloud public values
-  project_number: <%= ENV['GCP_PROJECT_NUMBER'] %>
-  project_id: <%= ENV['GCP_PROJECT_ID'] %>
+  # Project ID of the client object
+  project_id: "<%= ENV['GCP_PROJECT_ID'] %>"
   scope: "https://www.googleapis.com/auth/userinfo.email,https://www.googleapis.com/auth/userinfo.profile,https://www.googleapis.com/auth/bigquery,https://www.googleapis.com/auth/genomics.readonly,https://www.googleapis.com/auth/devstorage.read_only"
-  dataset_id: <%= ENV['GCP_DATASET_ID'] %>
-  variantset_id: 12315586687108630050  # This does not seem to be used anywhere.
 
-  ## Google BigQuery tables
-  variants: passing_variants
-  annotations: annotations
-  subject_samples: subject_sample
-  subjects: subject
-  de_novo_variants: variants_de_novo
-  sanger_variants: variants_sanger
-  subject_measures: measures
-  sequenced_samples: sequenced_samples
-  annotated_variants: annotated_variants
-  dbsnp_coordinates: dbsnp_coordinate
-  tests: tests
+  # Google BigQuery Tables (DB6)
+  # NOTE: The default configuration is set for the production use.
+  db6:
+    # Project ID of the data source
+    project_id: <%= ENV['BIGQUERY_PROJECT_ID'] %>
+    dataset_id: <%= ENV['BIGQUERY_DATASET_ID'] %>
+
+    tables:
+      portal_variants: <%= ENV['BIGQUERY_DATASET_ID'] %>.portal_use_only_feature_variants
+      portal_rare_variants: <%= ENV['BIGQUERY_DATASET_ID'] %>.portal_use_only_rare_feature_variants
+      annotations: <%= ENV['BIGQUERY_DATASET_ID'] %>.<%= ENV['BIGQUERY_BASE_ANNOTATION_TABLE'] or 'annotations_ilmn' %>  # Base Annotation Table (Illumina)
+      subject_samples: <%= ENV['BIGQUERY_DATASET_ID'] %>.subject_sample
+      subjects: <%= ENV['BIGQUERY_DATASET_ID'] %>.subject
+      de_novo_variants: <%= ENV['BIGQUERY_DATASET_ID'] %>.variants_de_novo
+      sanger_variants: <%= ENV['BIGQUERY_DATASET_ID'] %>.variants_sanger
+      subject_measures: <%= ENV['BIGQUERY_DATASET_ID'] %>.measures
+      sequenced_samples: <%= ENV['BIGQUERY_DATASET_ID'] %>.sequenced_samples
+      dbsnp_coordinates: <%= ENV['BIGQUERY_DATASET_ID'] %>.dbsnp_coordinate
+      tests: <%= ENV['BIGQUERY_DATASET_ID'] %>.tests
+      parental_genotypes: <%= ENV['BIGQUERY_DATASET_ID'] %>.parental_genotypes
+    extended_tables:
+      complete_genomics:
+        annotations: <%= ENV['BIGQUERY_DATASET_ID'] %>.annotations_cg
 
   # Default selected visible variant columns
   selected_preferences: &selected
     - sample_id
-    # variant related information
     - reference_name
     - start
     - end
@@ -46,80 +53,117 @@ default: &default
     - call_gq
     - inheritance
     - de_novo
-    # variant annotation
     - refseq_id
     - gene_symbol
     - effects_with_impacts # computed
     - a1000g_freq_max
     - gnomad_genome_freq_max
-    - mssng_freq_max
-    - paths # computed
-    # sample related information
+    - max_int_freq
     - sex
     - platform
-    # additional information
-    - igv # computed // Merged with fixed option column
-    - annotation_id # Merged with fixed option column
+    - clinvar_sig_simple
+    - clinvar_sig
   # Default unselected (not visible) variant columns
   unselected_preferences: &unselected
-    - category
-    - prioritizations
-    # annotated_variants
+#    - category TODO (#137): bring this back when the computation is corrected
+#    - prioritizations TODO (#132): bring this back when the computation is corrected
     - gnomad_exome_freq_max
     - exac_freq_max
     - call_filter
-    - inherited_quality
+#    - comp_het_rec TODO (#131): bring this back when the computation is corrected
+    - entrez_id
+    - dbsnp
+    - cgd_disease
+    - cgd_inheritance
+    - omim_phenotype
+    - effect_priority
+    - typeseq_priority
+    - affection
+    - familyid
+    - sanger_validated
+    - sanger_inheritance
+    - call_ehq
+    - call_hq
+    - gnomad_oe_lof_upper
+    - gnomad_oe_mis_upper
+    - gnomad_pli
+    - gnomad_prec
+    - min_int_ref
+    - freq_max
+    - comment
+  # All potentially selectable visible variant columns
+  selectable_preferences: &selectable
+    - *selected
+    - *unselected
+  variant_attrs:
+    - select_scope
+    - annotation_id
+    - sample_id
+    - reference_name
+    - start
+    - end
+    - reference_bases
+    - alternate_bases
+    - associated_alternate_bases
+    - letter_genotype # computed
+    - zygosity # computed
+    - call_dp
+    - ad
+    - call_gq
+    - inheritance
+    - de_novo
+    - refseq_id
+    - gene_symbol
+    - effects_with_impacts # computed
+    - a1000g_freq_max
+    - gnomad_genome_freq_max
+    - max_int_freq
+    - sex
+    - platform
+    - category
+    - prioritizations
+    - gnomad_exome_freq_max
+    - exac_freq_max
+    - call_filter
     - comp_het_rec
     - entrez_id
-    - genotype_likelihood
     - dbsnp
     - clinvar_sig
     - cgd_disease
     - cgd_inheritance
     - omim_phenotype
-    - call_phaseset
+    - aggregated_ehq
+    - aggregated_hq
     - effect_priority
     - typeseq_priority
-    # subject_samples
     - affection
     - familyid
-    # de_novos
-    # sangers
     - sanger_validated
     - sanger_inheritance
-    # measures
-    # computed
-  # All potentially selectable visible variant columns
-  selectable_preferences: &selectable
-    - *selected
-    - *unselected
-  # Other columns available from query results that could be made user selectable
-  available_preferences: &available
-    # variants
+    - call_hq
+    - call_ehq
     - genotype # this is computed by letter_genotype and zygosity
-    # annotations
     - results_count
     - effect_impact
-    - call_call_set_id
     - cg_freq_max
     - freq_max
     - nhlbi_freq_max
-    # subject_samples
     - dnasource
     - fatherid
     - familytype
     - motherid
     - subject_id
-    # de_novos
-    # sangers
-    # measures
     - phenotyped
-    # computed
-  variant_attrs:
-    - *selectable
-    - *available
+    - source
+    - gnomad_oe_lof_upper
+    - gnomad_oe_mis_upper
+    - gnomad_pli
+    - gnomad_prec
+    - min_int_ref
+    - comment
+    - clinvar_sig_simple
   annotated_variant_attrs:
-    - id
+    - select_scope
     - annotation_id
     - sample_id
     - subject_id
@@ -127,7 +171,6 @@ default: &default
     - entrez_id
     - refseq_id
     - genotype
-    - genotype_likelihood
     - sex
     - fatherid
     - motherid
@@ -136,25 +179,23 @@ default: &default
     - familytype
     - freq_max
     - a1000g_freq_max
-    - nhlbi_freq_max
+    - '"N/A" AS nhlbi_freq_max'
     - exac_freq_max
     - cg_freq_max
     - gnomad_exome_freq_max
     - gnomad_genome_freq_max
     - effect_impact
-    - typeseq_priority
-    - effect_priority
+    - '"N/A" AS typeseq_priority'
+    - '"N/A" AS effect_priority'
     - dbsnp
     - clinvar_sig
     - cgd_disease
     - cgd_inheritance
     - omim_phenotype
     - ad
-    - call_call_set_id
-    - call_filter
-    - call_dp
-    - call_gq
-    - call_phaseset
+    - filter AS call_filter
+    - dp AS call_dp
+    - gq AS call_gq
     - dnasource
     - platform
     - sanger_validated
@@ -166,10 +207,16 @@ default: &default
     - end
     - reference_bases
     - alternate_bases
-    - inherited_quality
+    - associated_alternate_bases
     - inheritance
     - comp_het_rec
-    - mssng_freq_max
+    - max_int_freq
+    - gnomad_oe_lof_upper
+    - gnomad_oe_mis_upper
+    - gnomad_pli
+    - gnomad_prec
+    - min_int_ref
+    - clinvar_sig_simple
   annotation_attrs:
     - id
     - reference_name
@@ -193,14 +240,11 @@ default: &default
     - HPO
     - CGD_disease
     - CGD_inheritance
-    - ExAc_mis_z
-    - ExAc_lof_z
-    - ExAc_pLI
     - ACMG_disease
     - Clinvar_SIG
-    - Clinvar_SIG_ord
+    - '"N/A" AS Clinvar_SIG_ord'
     - Clinvar_CLNREF
-    - Clinvar_CLNACC
+    - '"N/A" AS Clinvar_CLNACC'
     - Clinvar_ReviewStatus
     - cosmic
     - A1000g_all
@@ -209,9 +253,6 @@ default: &default
     - A1000g_eas
     - A1000g_afr
     - A1000g_sas
-    - NHLBI_all
-    - NHLBI_aa
-    - NHLBI_ea
     - ExAC_Freq
     - ExAC_AFR
     - ExAC_AMR
@@ -259,13 +300,11 @@ default: &default
     - ma_score
     - mt_score
     - CADD_phred
-    - phylopPMam
-    - phylopPMam_avg
+    - phylopMam      # Known as phylopPMam in DB5 (typo), corrected in DB6
+    - phylopMam_avg  # Known as phylopPMam_avg in DB5 (typo), corrected in DB6
     - phylopVert100
     - phylopVert100_avg
     - phastCons_placental
-    - gerp_elem
-    - gerp_wgs
     - pfam_annovar
     - per_cds_affected
     - per_transcripts_affected
@@ -275,8 +314,6 @@ default: &default
     - spx_strand
     - spx_transcript
     - spx_exonN
-    - spx_seqType
-    - spx_effType
     - spx_spliceDist
     - dbscSNV_ADA_SCORE
     - dbscSNV_RF_SCORE
@@ -285,12 +322,21 @@ default: &default
     - effect_impact
     - freq_max
     - A1000g_freq_max
-    - NHLBI_freq_max
     - ExAC_freq_max
     - cg_freq_max
     - gnomAD_exome_freq_max
     - gnomAD_genome_freq_max
-    - mssng_freq_max
+    - gnomad_oe_lof  # new in DB6
+    - gnomad_oe_lof_upper  # new in DB6
+    - gnomad_oe_mis  # new in DB6
+    - gnomad_oe_mis_upper  # new in DB6
+    - gnomad_pli  # new in DB6
+    - gnomad_prec  # new in DB6
+    - Annovar_key  # new in DB6
+    - clinvar_sig_simple  # new in DB6
+    - distance_spliceJunction
+    - comment  # new in DB6
+    - max_int_freq # renamed from mssng_freq_max in db5
   subject_attrs:
     - indexid
     - fatherid
@@ -301,8 +347,8 @@ default: &default
     - familytype
     - dob
   subject_sample_attrs:
-    - submittedid
     - indexid
+    - submittedid
     - dnasource
     - platform
     - nimhid
@@ -325,7 +371,6 @@ default: &default
     - dbsnp
   sequenced_sample_attrs:
     - call_call_set_name
-    - call_call_set_id
 
 development:
   <<: *default

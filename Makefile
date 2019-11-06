@@ -1,6 +1,7 @@
 IMAGE_NAME:=gcr.io/example-gcp-project/mssng
 IMAGE_VERSION:=dev
 IMAGE_TAG=$(IMAGE_NAME):$(IMAGE_VERSION)
+DEV_DB_CREDENTIAL=-uroot -prubyisallaround
 
 default:
 	@echo "No default job. Open Makefile for more info."
@@ -49,3 +50,10 @@ remote-test-e2e:
 		--from=cronjob/test-runner-cronjob-test-daily \
 		-n staging
 	python3 ci/cloudbuild/step-verify-e2e-tests/main.py -n staging zero-test-runner-manual
+
+dev-db-backup:
+	docker-compose exec mysql bash -c "mysqldump $(DEV_DB_CREDENTIAL) --databases users_staging entrez_staging 2> /dev/null" > "dev-db-latest.sql"
+	cp "dev-db-latest.sql" "dev-db-$$(date "+%Y%m%d-%H%M").sql"
+
+dev-db-restore:
+	docker run -it --rm --network "autism_default" -v $$(pwd):/opt mysql:5.7 bash -c "mysql -h mysql $(DEV_DB_CREDENTIAL) < /opt/dev-db-latest.sql"
