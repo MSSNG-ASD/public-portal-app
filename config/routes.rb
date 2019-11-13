@@ -68,6 +68,8 @@ Rails.application.routes.draw do
 
   root to: 'visitors#index'
 
+  ##### make_os_release: exclude #####
+
   ##############################################################################
   # FOR TESTING AND DEVELOPMENT ONLY                                           #
   ##############################################################################
@@ -80,5 +82,11 @@ Rails.application.routes.draw do
     post '/test/data-reset', to: 'test#reset_data'
     get '/test/error', to: 'test#trigger_sample_error'
     get '/test/nuclear-error', to: 'test#trigger_nuclear_error'
+
+    puts "WARNING: The test controller is enabled."
+  else
+    puts "NOTICE: The test controller is NOT enabled."
   end
+
+  ##### make_os_release: include #####
 end

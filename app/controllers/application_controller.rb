@@ -47,7 +47,7 @@ class ApplicationController < ActionController::Base
   def authorize_bigquery
     if user_signed_in? && !current_user.credentials.access_token.present?
       reset_session
-      redirect_to root_url, alert: "User #{current_user.email} is not authorized for BigQuery access to #{Rails.application.secrets[:project_id]}:mssng_20171020a"
+      redirect_to root_url, alert: "User #{current_user.email} is not authorized for BigQuery access"
     end
   end
 

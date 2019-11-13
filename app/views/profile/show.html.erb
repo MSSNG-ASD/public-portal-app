@@ -80,27 +80,4 @@
       </table>
     <% end %>
   </div>
-
-  <% if is_dev_env %>
-    <div class="col-md-4">
-      <h2>Access Token</h2>
-
-      <% ttl_in_hour = (@ttl / 60 / 60).to_i %>
-
-      <p>
-        The portal service provides a set of APIs which are reachable as you by the access token below:
-      </p>
-
-      <blockquote><code><%= @jwt %></code></blockquote>
-
-      <p>
-        However, this auto-generated token will be valid only for <%= ttl_in_hour %> hour<%= ttl_in_hour == 1 ? '' : 's' %> from now.
-      </p>
-
-      <div class="alert alert-warning" role="alert">
-        Despite of the token expiration, it is a common security practice that you <b>must not</b> share the access token to anyone.
-      </div>
-
-    </div>
-  <% end %>
 </div>

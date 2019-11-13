@@ -215,6 +215,8 @@ class AbstractAnnotatedVariantSearch < Search
       Field.new('gnomad_prec'),
       Field.new('min_int_ref'),
       Field.new('clinvar_sig_simple'),
+      Field.new('Sanger_validated'),
+      Field.new('Sanger_inheritance'),
     ]
 
     selected_fields = fields.map{ | f | f.alias.nil? ? "#{f.name.downcase}" : "#{f.name.downcase} AS #{f.alias}" }
@@ -308,20 +310,20 @@ WITH
       v_sanger.Sanger_validated,
       v_sanger.Sanger_inheritance
     FROM
-      `#{portal_variants_table}` v,  # This is a pre-computed table
+      `#{portal_variants_table}` v,
       UNNEST(v.call) AS c
     INNER JOIN `#{subject_samples_table}` AS ss
       ON (c.name = ss.SUBMITTEDID)
     INNER JOIN `#{subjects_table}` AS s
       USING (INDEXID)
     INNER JOIN annotations a
-      USING (annotation_id, select_scope)  # This is to utilize the clustering nature of the table.
+      USING (annotation_id, select_scope)
     LEFT JOIN `#{measures_table}` AS m
       USING (INDEXID)
     LEFT JOIN `#{variants_sanger_table}` AS v_sanger
       ON (
           (
-            CONCAT('chr', v_sanger.id) = a.annotation_id  # NOTE: The left-joined table uses the HG19 annotation reference.
+            CONCAT('chr', v_sanger.id) = a.annotation_id
             OR v_sanger.id = a.annotation_id
           )
           AND v_sanger.SUBMITTEDID = c.name
@@ -329,7 +331,7 @@ WITH
     LEFT JOIN `#{variants_de_novo_table}` AS v_de_novo
       ON (
           (
-            CONCAT('chr', v_de_novo.id) = a.annotation_id  # NOTE: The left-joined table uses the HG19 annotation reference.
+            CONCAT('chr', v_de_novo.id) = a.annotation_id
             OR v_de_novo.id = a.annotation_id
           )
           AND v_de_novo.SUBMITTEDID = c.name
