@@ -1,16 +1,93 @@
+<% special_view_fields = ['refseq_id'] %>
+<% tabular_view_fields = ['cosmic', 'SegDup'] %>
+<% semicolon_delimited_fields = [] %>
+<% colon_delimited_fields = ['dbsnp_region', 'dbsnp_wind', 'refseq_id'] %>
+<% switchable_fields = special_view_fields + semicolon_delimited_fields + tabular_view_fields + colon_delimited_fields %>
+
 <div class="row">
   <div class="col">
-    <h1><%= dt("#{controller_name}.#{action_name}.title", model: dt("#{controller_name}.#{action_name}.model"), instance: @annotation.id) %></h1>
+    <h1 class="title"><%= dt("#{controller_name}.#{action_name}.title", model: dt("#{controller_name}.#{action_name}.model"), instance: @annotation.id).html_safe %></h1>
   </div>
 </div>
-<dl class="row align-items-center">
-  <dt class="col-6 col-sm-4 col-md-3 text-right"><%= Annotation.human_attribute_name(:effects_with_impacts) %></dt>
-  <dd class="col-6 col-sm-8 col-md-9 mb-0"><%= @annotation.effects_with_impacts %></dd>
-  <dt class="col-6 col-sm-4 col-md-3 text-right"><%= Annotation.human_attribute_name(:paths) %></dt>
-  <dd class="col-6 col-sm-8 col-md-9 mb-0"><%= @annotation.paths %></dd>
-	<% Annotation.attrs.each do |a| %>
-	  <dt class="col-6 col-sm-4 col-md-3 text-right"><%= Annotation.human_attribute_name(a.to_sym) %></dt>
-	  <dd class="col-6 col-sm-8 col-md-9 mb-0"><%= @annotation.send(a) %></dd>
+
+<% dt_classes = 'col-sm-4 col-md-3 col-lg-3' %>
+<% dd_classes = 'col-sm-8 col-md-9 col-lg-9' %>
+
+<% if !@target_table.nil? %>
+  <dl class="row dl-kv">
+    <dt class="<%= dt_classes %>">Project</dt>
+    <dd class="<%= dd_classes %>"><%= @target_table.split('.')[0] %></dd>
+    <dt class="<%= dt_classes %>">Dataset</dt>
+    <dd class="<%= dd_classes %>"><%= @target_table.split('.')[1] %></dd>
+    <dt class="<%= dt_classes %>">Table</dt>
+    <dd class="<%= dd_classes %>"><%= @target_table.split('.')[2] %></dd>
+  </dl>
+<% end %>
+
+<dl class="row dl-kv">
+  <dt class="<%= dt_classes %>"><%= Annotation.human_attribute_name(:effects_with_impacts) %></dt>
+  <dd class="<%= dd_classes %>"><%= @annotation.effects_with_impacts %></dd>
+  <dt class="<%= dt_classes %>"><%= Annotation.human_attribute_name(:paths) %></dt>
+  <dd class="<%= dd_classes %>"><%= @annotation.paths %></dd>
+	<% Annotation.object_attrs.each do |a| %>
+    <% v = @annotation.send(a) %>
+	  <dt class="term <%= dt_classes %>" data-view="pretty">
+      <%= Annotation.human_attribute_name(a.to_sym) %>
+      <% if switchable_fields.include? a.to_s %>
+        <a class="toggle-view-mode" href="#<%= a %>/change-value-view-mode" title="Toggle value view mode"></a>
+      <% end %>
+    </dt>
+    <% if !v.nil? and switchable_fields.include? a.to_s %>
+	    <dd class="definition <%= dd_classes %>" data-key="<%= a.to_s %>" data-type="<%= v.class.to_s %>">
+        <div class="pretty">
+
+          <% if a.to_s == 'refseq_id' %>
+            <table class="table table-bordered table-striped refseq_id">
+              <tbody>
+                <tr>
+                  <th>Gene</th>
+                  <th>Transcript</th>
+                  <th>Exon</th>
+                  <th></th>
+                </tr>
+                <% v.split(/,/).each do |item| %>
+                  <tr>
+                    <% item.split(/:/, 4).each do |subitem| %>
+                      <td><%= subitem %></td>
+                    <% end %>
+                  </tr>
+                <% end %>
+              </tbody>
+            </table>
+          <% elsif tabular_view_fields.include? a.to_s %>
+            <table class="table table-bordered table-striped">
+              <tbody>
+                <% v.split(/;/).each do | dataset | %>
+                  <% k, subvalue = dataset.split(/=/, 2) %>
+
+                  <tr>
+                    <th><%= k %></th>
+                    <td><ul><% subvalue.split(/,/).each do | item | %><li><%= item %></li><% end %></ul></td>
+                  </tr>
+                <% end %>
+              </tbody>
+            </table>
+          <% elsif semicolon_delimited_fields.include? a.to_s %>
+            <%= v.gsub(/;/, ';<br/>').html_safe %>
+          <% else %>
+            <ul style="padding-left: 1.5rem">
+              <% v.split(/,/).each do |item| %>
+                <li><%= item %></li>
+              <% end %>
+            </ul>
+          <% end %>
+
+        </div>
+        <div class="raw"><%= v.gsub(/([,;\(=\)_-])/, '\1<span class="invisible-line-breaker"> </span>').html_safe %></div>
+      </dd>
+    <% else %>
+      <dd class="<%= dd_classes %>" data-type="<%= v.class.to_s %>"><%= v %></dd>
+    <% end %>
 	<% end %>
 </dl>
 <div class="row">
@@ -18,3 +95,18 @@
 		<%= link_to dt('actions.back'), :back, class: 'btn btn-primary' %>
   </div>
 </div>
+
+<script>
+window.addEventListener('load', () => {
+  document.querySelectorAll('a.toggle-view-mode').forEach((target) => {
+    target.addEventListener('click', (e) => {
+      e.preventDefault();
+
+      let target = e.currentTarget.parentElement;
+      let currentMode = target.getAttribute('data-view');
+
+      target.setAttribute('data-view', currentMode === 'pretty' ? 'raw' : 'pretty');
+    });
+  });
+});
+</script>

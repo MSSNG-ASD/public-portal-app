@@ -1,13 +1,40 @@
+<!-- Load the IGV code -->
+<script src="https://cdn.jsdelivr.net/npm/igv@2.3.0/dist/igv.min.js"></script>
+<!-- Container code -->
 <div class="row">
   <div class="col">
-    <h1><%= dt("#{controller_name}.#{action_name}.title", :model => dt("#{controller_name}.#{action_name}.model"), :instance => @subject_sample_id) %></h1>
+    <h1 class="title"><%= dt(
+      "#{controller_name}.#{action_name}.title",
+      :model => dt("#{controller_name}.#{action_name}.model"),
+      :instance => @subject_sample_id).html_safe
+    %></h1>
   </div>
 </div>
 <div class="row">
   <div class="col">
-    <% if @platform.eql?('Complete Genomics') %>
-      <%= dt("notices.no_reads") %>
-    <% end %>
-    <%= content_tag(:div, "", id: "igv-container", data: {token: current_user.token, locus: @locus, tracks: @tracks}) %>
+    <div id="igv-container"></div>
   </div>
 </div>
+<!-- Start-up script -->
+<script>
+  window.addEventListener('load', () => {
+    let container = document.getElementById('igv-container');
+    let options = {
+      genome: "hg38",
+      oauthToken: "<%= current_user.token %>",
+      showKaryo: false,
+      showNavigation: true,
+      fastaURL: "//dn7ywbm9isq8j.cloudfront.net/genomes/seq/1kg_v37/human_g1k_v37_decoy.fasta",
+      cytobandURL: "//dn7ywbm9isq8j.cloudfront.net/genomes/seq/b37/b37_cytoband.txt",
+      locus: "<%= @locus %>",
+      tracks: <%= @tracks.to_json.html_safe %>
+    };
+
+    igv
+      .createBrowser(container, options)
+      .then(function (browser) {
+        console.log("Created the read browser");
+      })
+    ;
+  });
+</script>

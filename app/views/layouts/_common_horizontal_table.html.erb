@@ -1,0 +1,18 @@
+<table id="<%= table_id %>" class="table table-horizontal table-bordered <%= table_classes or '' %>">
+  <thead>
+    <tr>
+      <% columns.each do | column_id, column | %>
+        <th data-test-key="<%= column_id %>" class="dt-key" scope="col"><%= column[:label] %></th>
+      <% end %>
+    </tr>
+  </thead>
+  <tbody>
+    <% rows.each_with_index do | row, row_index | %>
+      <tr data-row="<%= row_index + 1 %>">
+        <% columns.each do | column_id, column | %>
+          <td data-test-key="<%= column_id %>" class="dt-value" style="<%= column[:style] %>"><%= row[column_id] %></td>
+        <% end %>
+      </tr>
+    <% end %>
+  </tbody>
+</table>

@@ -115,7 +115,7 @@ en:
         other: &annotated_variants Variants
       variant_search:
         one: &variant_search Variant Query
-        other: &variant_searches Variants
+        other: &variant_searches Variant Queries
       annotation:
         one: &annotation Annotation
         other: &annotations Annotations
@@ -129,17 +129,17 @@ en:
         one: &gene_set Gene List
         other: &gene_sets Gene Lists
       trio:
-        one: &trio Trio Query
-        other: &trios Trios
+        one: &trio Sample Query
+        other: &trios Sample Queries
       subject:
         one: &subject Subject
         other: &subjects Subjects
       subject_sample:
         one: &subject_sample Subject Sample
-        other: &subject_samples Subject Info
+        other: &subject_samples Phenotypes
       subject_sample_search:
-        one: &subject_sample_search Subject Query
-        other: &subject_sample_searches Subject Info
+        one: &subject_sample_search Phenotype Query
+        other: &subject_sample_searches Phenotypes
       subject_measure:
         one: &subject_measure Subject Measure
         other: &subject_measures Subject Measures
@@ -182,68 +182,20 @@ en:
         gender: Gender
         search: Query
         mapping_quality: Mapping Quality
-        sql: SQL
+        sql: BigQuery SQL
         advanced: Advanced Query
         destroy_all: Delete All
       variant_search:
-        name: *variant_search
+        name: Query Name # *variant_search
         search: *variant_search
         search_placeholder: One Box Query
-        search_defaults: |
-          Defaults: Quality Variants = true, Control Database Frequency <= 0.01, Affection = affected, Damage Potential = High
-          <br />Use the Advanced Query for alternative query parameters
-          <br />Coordinates are 0-based, using the hg19 reference
-        search_popover: |
-          <table>
-            <thead>
-              <tr>
-                <th>Description</th>
-                <th>Example</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr>
-                <td>Query for a specific variant in all subjects:</td>
-                <td>2-50724816-50724817-G-A</td>
-              </tr>
-              <tr>
-                <td>Query for all variants within a specific genomic interval (or position), in all subjects:</td>
-                <td>2-50724816-50724817</td>
-              </tr>
-              <tr>
-                <td>Query for all rare high-impact variants within a specific gene, in all subjects:</td>
-                <td>NRXN1</td></tr>
-              <tr>
-                <td>Query for all rare high-impact variants within a specific gene, in a specific subject:</td>
-                <td>NRXN1;9-9999-001</td></tr>
-              <tr>
-                <td>Query for all rare high-impact variants within two genes, in all subjects:</td>
-                <td>NRXN1;NRXN3</td></tr>
-              <tr>
-                <td>Query for a specific cDNA change within a gene, in all subjects:</td>
-                <td>NRXN1:c.C2653T</td></tr>
-              <tr>
-                <td>Query for any variant modifying a specific cDNA position within a gene, in all subjects:</td>
-                <td>NRXN1:c.2653</td></tr>
-              <tr>
-                <td>Query for a specific amino acid change within a gene, in all subjects:</td>
-                <td>NRXN1:p.H885Y</td></tr>
-              <tr>
-                <td style="padding-right: 15px;">Query for any variant modifying a specific amino acid position within a gene, in all subjects:</td>
-                <td>NRXN1:p.885</td></tr>
-              <tr>
-                <td>Query for a specific dbSNP ID in all subjects:</td>
-                <td>rs199784139</td>
-              </tr>
-            </tbody>
-          </table>
         history: Query History
         saved_history: Saved Queries
         saved_name: Variant Query Name
         denovo: De Novo
         variant: *variant
         variant_placeholder: chr-start-end-ref-alt
-        variant_hint: "Example: 2-50724816-50724817-G-A"
+        variant_hint: "Example: 2-50497678-50497679-G-A"
         dbsnp_placeholder: dbSNP ID
         dbsnp_hint: "e.g. rs199784139"
         chromosome: Chromosome
@@ -262,14 +214,14 @@ en:
         gene_ids_placeholder: e.g. SHANK1
         index_ids: Subject(s)
         stringy_index_ids: Subject(s)
-        index_ids_placeholder: e.g. 9-9999-001
+        index_ids_placeholder: e.g. 1-0022-001
         submitted_ids: Sample(s)
         stringy_submitted_ids: Sample(s)
-        submitted_ids_placeholder: e.g. 9-9999-001
+        submitted_ids_placeholder: e.g. 1-0022-001
         dna_source: DNA Source
         platform: Platform
         gender: Gender
-        passing: Quality Variants
+        passing: Variant quality
         frequency: Control Database Frequency
         frequency_operator: Frequency Operator
         role: Relation
@@ -300,7 +252,7 @@ en:
         accordion_significance_title: by Variant Annotation
         advanced: Advanced Query
         destroy_all: Delete All
-        popover: "Variants at Genomic Interval"
+        popover: "Search variants at Genomic Interval"
       gene:
         gene_id: Entrez Gene ID
         symbol: Gene Symbol
@@ -333,14 +285,13 @@ en:
         category: Category
         evidence: Evidence
         qualifier: Qualifier
-        rna_accession: RNA Accession
+        rna_accession: RNA Accession Numbers
         protein_accession: Protein Accession
         genome_accession: Genome Accession
         popover: "Gene Information"
       gene_search:
-        name: *gene_search
+        name: Query Name # *gene_search
         search_placeholder: One Box Query
-        search_popover: "Query for gene(s) by symbol. e.g. NRXN1"
         history: Query History
         saved_history: Saved Queries
         saved_name: Gene Query Name
@@ -384,29 +335,26 @@ en:
         inheritances: CGD Inheritance(s)
         popover: "Lists of Genes"
       subject_sample_search:
-        name: *subject_sample_search
+        name: Query Name # *subject_sample_search
         search_placeholder: One Box Query
-        search_popover: "Query for Subjects(s) by ID e.g. 9-9999-001;9-9999-002"
         history: Query History
         saved_history: Saved Queries
         saved_name: Subject Query Name
         index_ids: Subject(s)
         stringy_index_ids: Subject(s)
-        index_ids_placeholder: e.g. 9-9999-001
+        index_ids_placeholder: e.g. 1-0004-001
         submitted_ids: Sample(s)
         stringy_submitted_ids: Sample(s)
-        submitted_ids_placeholder: e.g. 9-9999-001
+        submitted_ids_placeholder: e.g. 1-0004-001
         dna_source: DNA Source
         platform: Platform
         advanced: Advanced Query
         destroy_all: Delete All
         popover: "Subject/Sample Information"
       trio:
-        name: *trio
+        name: Query Name # *trio
         index_ids: Subject ID
         search_placeholder: One Box Query
-        search_defaults: "Defaults: Quality Variants = true, Control Database Frequency <= 0.05, Damage Potential = High or Medium<br />Use the Advanced Query for alternative query parameters<br />Coordinates are 0-based, using the hg19 reference"
-        search_popover: "Query for Trio with subject ID: 9-9999-001"
         history: Query History
         saved_history: Saved Queries
         saved_name: Trio Query Name
@@ -417,12 +365,13 @@ en:
         stringy_gene_ids: Symbol(s)
         gene_ids_placeholder: e.g. SHANK1
         stringy_index_ids: Subject ID
-        index_ids_placeholder: e.g. 9-9999-001
-        popover: "Trio Information"
+        index_ids_placeholder: e.g. 2-1116-003
+        popover: "Search variants by subject/family"
         frequency: Control Database Frequency
         frequency_operator: Frequency Operator
         zygosity: Zygosity
         impacts: &impacts Damage Potential
+        passing: Variant quality
         impacts_placeholder: Click to select Impacts
         effects: Effect On Gene Product
         effects_with_impacts: 'Effect - Impact'
@@ -446,6 +395,7 @@ en:
         het_risk: Heterozygous autism risk gene
         het_denovo: Heterozygous de-novo
         hemi_homo_x: Hemizygous or homozygous X-linked
+        advanced: Advanced Query
   activemodel:
     attributes:
       annotation:
@@ -518,8 +468,8 @@ en:
         ma_score: ma_score
         mt_score: mt_score
         cosmic: cosmic
-        phylopPMam: phylopPMam
-        phylopPMam_avg: phylopPMam_avg
+        phylopPMam: phylopMam
+        phylopPMam_avg: phylopMam_avg
         phylopVert100: phylopVert100
         phylopVert100_avg: phylopVert100_avg
         phastCons_placental: phastCons_placental
@@ -543,14 +493,13 @@ en:
         spx_seqType: spx_seqType
         spx_effType: spx_effType
         spx_spliceDist: spx_spliceDist
-        A1000g_freq_max: max frequency 1000 Genomes
+        A1000g_freq_max: Max frequency (1000 Genomes)
         ExAC_freq_max: max frequency ExAC
         freq_max: max frequency
         igv: Read Viewer
-        mssng_freq_max: max frequency MSSNG
+        max_int_freq: max frequency MSSNG
       annotated_variant:
         sample_id: Sample
-        call_call_set_id: Call Set ID
         reference_name: Chr
         start: Start
         end: End
@@ -576,12 +525,12 @@ en:
         sex: Sex
         ad: Allelic depth
         platform: Sequencing platform
-        genotype_likelihood: Genotype likelihood
         dbsnp: dbSNP ID
         call_filter: Filter
         call_dp: Read depth
         call_gq: Genotype quality
-        call_phaseset: Phase
+        call_hq: Call.HQ*
+        call_ehq: Call.EHQ*
         call_allele1ReadCount: allele1ReadCount
         call_allele1VarFilter: allele1VarFilter
         call_allele1VariantQuality: allele1VariantQuality
@@ -596,9 +545,9 @@ en:
         call_allele2HapLink: allele2HapLink
         popover: "Variants at Genomic Interval"
         effects_with_impacts: 'Effect - Impact'
-        a1000g_freq_max: max frequency 1000 Genomes
-        exac_freq_max: max frequency ExAC
-        freq_max: max frequency
+        a1000g_freq_max: Max frequency (1000 Genomes)
+        exac_freq_max: Max frequency ExAC
+        freq_max: Max Frequency
         igv: Read Viewer
         refseq_id: RefSeq ID
         spx_gene: SPX Gene
@@ -608,12 +557,17 @@ en:
         cgd_disease: CGD Disease
         cgd_inheritance: CGD Inheritance
         omim_phenotype: OMIM Phenotype
-        inherited_quality: Inherited Quality
         comment: Comment
-        gnomad_exome_freq_max: max frequency GnomAD exome
-        gnomad_genome_freq_max: max frequency GnomAD genome
+        gnomad_exome_freq_max: Max frequency GnomAD exome
+        gnomad_genome_freq_max: Max frequency GnomAD genome
         comp_het_rec: Compound heterozygous recessive
-        mssng_freq_max: max frequency MSSNG
+        max_int_freq: Max Frequency (MSSNG)
+        gnomad_oe_lof_upper: LOF observed/expected (oe) metric - CI upper bound
+        gnomad_oe_mis_upper: Missense observed/expected (oe) metric - CI upper bound
+        gnomad_pli: Probability of being loss-of-function intolerant
+        gnomad_prec: Probability of being intolerant of homozygous but not heterozygous LOF variants
+        min_int_ref: Minimum Reference Fraction (MSSNG)
+        clinvar_sig_simple: Clinvar Significance Simple
       subject:
         indexid: Proband
         fatherid: Father
@@ -639,6 +593,7 @@ en:
         measure: Measure
         value: Value
         popover: "Subject/Sample Information"
+        igv: Read Viewer
   app:
     name: MSSNG
     copyright: MSSNG 2017
@@ -651,7 +606,7 @@ en:
     message: "Create it in %{file}."
   mail:
     nav: "Questions/Feedback"
-    address: "help@mss.ng"
+    address: "asgenetics@autismspeaks.org"
     subject: "Questions/Feedback from MSSNG Portal"
     body: "Dear %{email},"
   popovers:
@@ -693,7 +648,7 @@ en:
     profile: Account
     signout: Sign Out
     signin: Sign In
-    preferences: Column Preferences
+    preferences: Column Visibility
     back: Back
     sql: BigQuery SQL
   database:
@@ -714,7 +669,7 @@ en:
       submit: "Create %{model}"
     default_update: &user_default_update
       <<: *user_default
-      title: "Editing %{model}: %{instance}"
+      title: "<span class=\"secondary\">Editing %{model}:</span> %{instance}"
       submit: "Update %{model}"
     index:
       <<: *user_default
@@ -760,17 +715,17 @@ en:
     update: *read_search_default_update
   variant_searches:
     default: &variant_search_default
-      title: "%{model}: %{instance}"
+      title: '<span class="secondary">%{model}:</span> %{instance}'
       model: *variant_search
       confirm: "This will delete '%{model}' and cannot be undone."
     default_create: &variant_search_default_create
       <<: *variant_search_default
       title: "New %{model}"
-      submit: "%{model}"
+      submit: "Make a query"
     default_update: &variant_search_default_update
       <<: *variant_search_default
-      title: "Editing %{model}: %{instance}"
-      submit: "Update %{model}"
+      title: '<span class="secondary">%{model}:</span> %{instance}'
+      submit: Update the query
     index:
       <<: *variant_search_default
       title: "%{model} History"
@@ -784,7 +739,7 @@ en:
       submit: "Delete Selected"
     show:
       <<: *variant_search_default
-      submit: Save Variant Query
+      submit: Save this query
     destroy: *variant_search_default
     new: *variant_search_default_create
     create: *variant_search_default_create
@@ -792,7 +747,7 @@ en:
     update: *variant_search_default_update
   annotations:
     default: &annotation_default
-      title: "%{model}: %{instance}"
+      title: "<span class=\"secondary\">%{model}:</span> %{instance}"
       model: *annotation
       confirm: "This will delete '%{model}' and cannot be undone."
     default_create: &annotation_default_create
@@ -821,11 +776,11 @@ en:
     default_create: &gene_search_default_create
       <<: *gene_search_default
       title: "New %{model}"
-      submit: "%{model}"
+      submit: "Make a query" # "%{model}"
     default_update: &gene_search_default_update
       <<: *gene_search_default
       title: "Editing %{model}: %{instance}"
-      submit: "Update %{model}"
+      submit: "Update this query"
     index:
       <<: *gene_search_default
       title: "%{model} History"
@@ -839,7 +794,7 @@ en:
       submit: "Delete Selected"
     show:
       <<: *gene_search_default
-      submit: Save Gene Query
+      submit: Save this query
     destroy: *gene_search_default
     new: *gene_search_default_create
     create: *gene_search_default_create
@@ -847,7 +802,7 @@ en:
     update: *gene_search_default_update
   genes:
     default: &gene_default
-      title: "%{model}: %{instance}"
+      title: '<span class="secondary">%{model}:</span> %{instance}'
       model: *gene
       confirm: "This will delete '%{model}' and cannot be undone."
     default_create: &gene_default_create
@@ -856,7 +811,7 @@ en:
       submit: "%{model}"
     default_update: &gene_default_update
       <<: *gene_default
-      title: "Editing %{model}: %{instance}"
+      title: '<span class="secondary">Editing %{model}:</span> %{instance}'
       submit: "Update %{model}"
     index:
       <<: *gene_default
@@ -893,17 +848,17 @@ en:
     update: *gene_set_default_update
   trios:
     default: &trio_default
-      title: "%{model}: %{instance}"
+      title: '<span class="secondary">%{model}:</span> %{instance}'
       model: *trio
       confirm: "This will delete '%{model}' and cannot be undone."
     default_create: &trio_default_create
       <<: *trio_default
       title: "New %{model}"
-      submit: "%{model}"
+      submit: "Make a query"
     default_update: &trio_default_update
       <<: *trio_default
-      title: "Editing %{model}: %{instance}"
-      submit: "Update %{model}"
+      title: '<span class="secondary">Editing %{model}:</span> %{instance}'
+      submit: "Update this query"
     index:
       <<: *trio_default
       title: "%{model} History"
@@ -911,13 +866,13 @@ en:
       confirm: "This will delete your query history and cannot be undone."
     saved:
       <<: *trio_default
-      title: "Saved %{model}"
+      title: "Saved this query"
       model: *trios
       confirm: "This will delete the selected saved queries and cannot be undone."
       submit: "Delete Selected"
     show:
       <<: *trio_default
-      submit: Save Trio Query
+      submit: Save this query
     destroy: *trio_default
     new: *trio_default_create
     create: *trio_default_create
@@ -948,16 +903,17 @@ en:
     update: *proband_default_update
   subject_samples:
     default: &subject_sample_default
-      title: "%{model}: %{instance}"
+      title: '<span class="secondary">%{model}:</span> %{instance}'
       model: *subject_sample
       confirm: "This will delete '%{model}' and cannot be undone."
+    # NOTE: Is this in used?
     default_create: &subject_sample_default_create
       <<: *subject_sample_default
-      title: "New %{model} Query"
-      submit: "Query %{model}"
+      title: "New %{model}"
+      submit: "Create a new %{model}"
     default_update: &subject_sample_default_update
       <<: *subject_sample_default
-      title: "Editing %{model}: %{instance}"
+      title: '<span class="secondary">Editing %{model}:</span> %{instance}'
       submit: "Update %{model}"
     index:
       <<: *subject_sample_default
@@ -972,17 +928,17 @@ en:
     update: *subject_sample_default_update
   subject_sample_searches:
     default: &subject_sample_search_default
-      title: "%{model}: %{instance}"
+      title: '<span class="secondary">%{model}:</span> %{instance}'
       model: *subject_sample_search
       confirm: "This will delete '%{model}' and cannot be undone."
     default_create: &subject_sample_search_default_create
       <<: *subject_sample_search_default
       title: "New %{model}"
-      submit: "%{model}"
+      submit: "Make a query"
     default_update: &subject_sample_search_default_update
       <<: *subject_sample_search_default
-      title: "Editing %{model}: %{instance}"
-      submit: "Update %{model}"
+      title: '<span class="secondary">Editing %{model}:</span> %{instance}'
+      submit: Update this query # "Update %{model}"
     index:
       <<: *subject_sample_search_default
       title: "%{model} History"
@@ -996,7 +952,7 @@ en:
       submit: "Delete Selected"
     show:
       <<: *subject_sample_search_default
-      submit: Save Subject Query
+      submit: Save this query # "%{model}"
     destroy: *subject_sample_search_default
     new: *subject_sample_search_default_create
     create: *subject_sample_search_default_create

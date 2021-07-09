@@ -58,7 +58,7 @@ class GeneSearchesController < ApplicationController
     @gene_search = GeneSearch.new(secure_params)
     @gene_search.user = @user
     if @gene_search.save
-      flash[:notice] = dt("notices.create", :model => @gene_search.name)
+      # flash[:notice] = dt("notices.create", :model => @gene_search.name)
     end
     respond_with(@gene_search)
     # respond_with(@gene_search, :location => gene_searches_url)
@@ -70,7 +70,7 @@ class GeneSearchesController < ApplicationController
   # PUT  /gene_searches/<gene_search>
   def update
     if @gene_search.update(secure_params)
-      flash[:notice] = dt("notices.update", :model => @gene_search.name)
+      # flash[:notice] = dt("notices.update", :model => @gene_search.name)
     end
     if secure_params.include?('saved')
       respond_with(@gene_search, :location => search_gene_searches_url)
@@ -90,7 +90,7 @@ class GeneSearchesController < ApplicationController
   def search
     @gene_search = GeneSearch.new
   end
-  
+
   private
     def set_gene_search
       @gene_search = GeneSearch.find(params[:id])
@@ -99,7 +99,7 @@ class GeneSearchesController < ApplicationController
     def set_user
       @user = current_user
     end
-    
+
     def secure_params
       params.require(:gene_search).permit(:saved, :search, :name, :stringy_gene_ids, :stringy_go_ids, :stringy_hpo_ids, :stringy_mim_ids, inheritances: [])
     end

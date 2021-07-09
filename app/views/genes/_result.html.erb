@@ -1,0 +1,132 @@
+<section>
+  <h2><%= dt("database.gene") %></h2>
+
+  <div class="body">
+    <%= render(
+      partial: "layouts/common_vertical_kw_table",
+      locals: {
+        table_id: "entrez",
+        kv: {
+          Gene.human_attribute_name(:gene_id)      => result.gene_id,
+          Gene.human_attribute_name(:symbol)       => link_to_ref_gene(result.symbol),
+          Gene.human_attribute_name(:chromosome)   => result.chrom,
+          Gene.human_attribute_name(:map_location) => link_to_ucsc_postion(result.mapLocation),
+          Gene.human_attribute_name(:synonyms)     => (result.synonyms || "").split("|").map{|symbol| link_to_ref_gene(symbol)}.join(", ").html_safe,
+          Gene.human_attribute_name(:description)  => result.description,
+          Gene.human_attribute_name(:type_of_gene) => result.typeOfGene,
+          Gene.human_attribute_name(:dbXrefs)      => (result.dbXrefs || "").split("|").map{|xref| link_to_xref(xref)}.join(", ").html_safe,
+        },
+      }
+    ) %>
+  </div>
+</section>
+
+<section>
+  <h2><%= dt("database.ref_seq") %></h2>
+
+  <div class="body">
+    <%= render(
+      partial: "layouts/common_horizontal_kw_table",
+      locals: {
+        table_id: "refseq",
+        kv: {
+          Gene.human_attribute_name(:chromosome)     => result.chrom,
+          Gene.human_attribute_name(:start_position) => result.range.nil? ? '(N/A)' : result.range[0],
+          Gene.human_attribute_name(:end_position)   => result.range.nil? ? '(N/A)' : result.range[1],
+        },
+      }
+    ) %>
+
+    <table class="table table-striped table-bordered">
+      <thead>
+        <tr>
+          <th><%= Gene.human_attribute_name(:rna_accession) %></th>
+        </tr>
+      </thead>
+      <tbody>
+        <% result.ref_genes.each do |ref_gene| %>
+          <tr>
+            <td><%= link_to_ncbi(ref_gene.refSeqID) %></td>
+          </tr>
+        <% end %>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<% if result.condition %>
+  <section>
+    <h2><%= dt("database.condition") %></h2>
+
+    <div class="body">
+      <%= render(
+        partial: "layouts/common_vertical_kw_table",
+        locals: {
+          table_id: "cgd",
+          kv: {
+            Gene.human_attribute_name(:condition)                => result.condition.condition,
+            Gene.human_attribute_name(:inheritance)              => result.condition.inheritance,
+            Gene.human_attribute_name(:age_group)                => result.condition.ageGroup,
+            Gene.human_attribute_name(:allelic_conditions)       => result.condition.allelicConditions,
+            Gene.human_attribute_name(:manifestation_categories) => result.condition.manifestationCategories,
+            Gene.human_attribute_name(:intervention_categories)  => result.condition.interventionCategories,
+            Gene.human_attribute_name(:intervention_rationale)   => result.condition.interventionRationale,
+            Gene.human_attribute_name(:comments)                 => result.condition.comments,
+            Gene.human_attribute_name(:references)               => result.condition.references.split(";").map{|reference| link_to_pubmed(reference.strip)}.join(", ").html_safe,
+          },
+        }
+      ) %>
+    </div>
+  </section>
+<% end %>
+
+<section>
+  <h2><%= dt("database.phenotype") %></h2>
+
+  <div class="body">
+    <table id="hpo" class="table table-striped table-bordered">
+      <thead>
+        <tr>
+          <th><%= Gene.human_attribute_name(:disease_id) %></th>
+          <th><%= Gene.human_attribute_name(:hpo_id) %></th>
+          <th><%= Gene.human_attribute_name(:gene_term) %></th>
+        </tr>
+      </thead>
+      <tbody>
+        <% result.phenotypes.each do |phenotype| %>
+          <tr class="hpo-result">
+            <td data-test-key="<%= Gene.human_attribute_name(:disease_id) %>"><%= link_to_xref(phenotype.database) %></td>
+            <td data-test-key="<%= Gene.human_attribute_name(:hpo_id) %>"><%= link_to_xref(phenotype.HPOterm) %></td>
+            <td data-test-key="<%= Gene.human_attribute_name(:gene_term) %>"><%= phenotype.HPOname %></td>
+          </tr>
+        <% end %>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<section>
+  <h2><%= dt("database.omim") %></h2>
+
+  <div class="body">
+    <table id="omim" class="table table-striped table-bordered">
+      <thead>
+        <tr>
+          <th><%= Gene.human_attribute_name(:mim_type) %></th>
+          <th><%= Gene.human_attribute_name(:disorder) %></th>
+          <th><%= Gene.human_attribute_name(:mim_phenotype) %></th>
+        </tr>
+      </thead>
+      <tbody>
+        <% result.omims.each do |omim| %>
+          <tr class="omim-result">
+            <td data-test-key="<%= Gene.human_attribute_name(:mim_type) %>"><%= omim.MIMentryType %></td>
+            <td data-test-key="<%= Gene.human_attribute_name(:disorder) %>"><%= omim.phenotype %></td>
+            <td data-test-key="<%= Gene.human_attribute_name(:mim_phenotype) %>"><%= link_to_omim(omim.MIMphenotype) %></td>
+          </tr>
+        <% end %>
+      </tbody>
+    </table>
+  </div>
+</section>
+

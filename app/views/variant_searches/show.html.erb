@@ -1,17 +1,30 @@
-<div class="row">
-  <div class="col">
-    <h1><%= dt("#{controller_name}.#{action_name}.title", model: dt("#{controller_name}.#{action_name}.model"), instance: @variant_search.name) %></h1>
+<% search = @variant_search %>
+
+<div class="row" data-count="<%= search.variants.count %>">
+  <div class="col-12">
+    <h1 class="title"><%= dt(
+      "#{controller_name}.#{action_name}.title",
+      model: dt("#{controller_name}.#{action_name}.model"),
+      instance: search.name
+    ).html_safe %></h1>
   </div>
 </div>
-<%= render partial: "users/preferences_modal", locals: { user: @variant_search.user } %>
-<% if @variant_search.search.present? %>
-<%= render partial: "variants", locals: { variant_search: @variant_search } %>
-<% else %>
-<%= render partial: "variants", locals: { variant_search: @variant_search } %>
+
+<%= render partial: "users/preferences_modal", locals: { user: search.user } %>
+<%= render partial: "variants", locals: { variant_search: search } %>
+
+<% if ENV['UI_SHOW_EXECUTION_TIME'] == '1' %>
+  <div class="row rendering-time">
+    <% primary_job_stat = search.primary_job.stat %>
+    <% query_time = ((primary_job_stat['endTime'].to_i * 1.0 - primary_job_stat['creationTime'].to_i) / 1000).round(3) %>
+    <% rendering_time = (Time.now - @requested_timestamp).round(3) %>
+    <p><b><%= query_time %></b> sec to query and <b><%= rendering_time %></b> sec to render</p>
+  </div>
 <% end %>
-<div class="row">
-  <div class="col form-actions">
-  	<%= link_to dt('actions.edit', model: VariantSearch.model_name.human), edit_variant_search_path(@variant_search), class: 'btn btn-primary' %>
-  	<%= link_to dt("actions.destroy", model: VariantSearch.model_name.human), variant_search_path(@variant_search), class: 'btn btn-danger', method: :delete, data: { confirm: dt("#{controller_name}.#{action_name}.confirm", model: @variant_search.name) } %>
-</div>
-</div>
+
+<!--<div class="row">-->
+<!--  <div class="col form-actions">-->
+  	<%#= link_to 'Edit this query', edit_variant_search_path(@variant_search), class: 'btn btn-primary' %>
+  	<%#= link_to 'Delete this query', variant_search_path(@variant_search), class: 'btn btn-danger', method: :delete, data: { confirm: dt("#{controller_name}.#{action_name}.confirm", model: @variant_search.name) } %>
+<!--  </div>-->
+<!--</div>-->

@@ -1,24 +1,97 @@
-<div class="jumbotron">
-  <div class="container-fluid">
-    <div class="row mb-3 mb-lg-0">
-      <div class="col-lg-6">
-        <h1 class="display-4"><%= VariantSearch.model_name.human %></h1>
+<%
+  examples = [
+    {
+      type: 'a specific variant in all subjects',
+      example: '2-50497678-50497679-G-A',
+    },
+    {
+      type: 'all variants within a specific genomic interval (or position), in all subjects',
+      example: '2-50724816-50724817',
+    },
+    {
+      type: 'all rare high-impact variants within a specific gene, in all subjects',
+      example: 'NRXN1',
+    },
+    {
+      type: 'all rare high-impact variants within a specific gene, in a specific subject',
+      example: 'NRXN1;2-1116-003',
+    },
+    {
+      type: 'all rare high-impact variants within two genes, in all subjects',
+      example: 'NRXN1;NRXN3',
+    },
+    {
+      type: 'a specific cDNA change within a gene, in all subjects',
+      example: 'NRXN1:c.C2653T',
+    },
+    {
+      type: 'any variant modifying a specific cDNA position within a gene, in all subjects',
+      example: 'NRXN1:c.2653',
+    },
+    {
+      type: 'a specific amino acid change within a gene, in all subjects',
+      example: 'NRXN1:p.H885Y',
+    },
+    {
+      type: 'Query for any variant modifying a specific amino acid position within a gene, in all subjects',
+      example: 'NRXN1:p.885',
+    },
+    {
+      type: 'a specific dbSNP ID in all subjects',
+      example: 'rs199784139',
+    }
+  ]
+%>
+<div class="row">
+  <div class="col">
+    <div class="one-box-query-container">
+      <%= render(
+        partial: 'layouts/one_box_query',
+        locals: {
+          target: @variant_search,
+          selection_url: nil,
+          quick_help_text: 'All coordinates are <b>0-based</b> and use the <b>GRCh38/hg38</b> reference.',
+          query_history_url: variant_searches_path,
+          saved_queries_url: saved_variant_searches_path,
+          advanced_query_url: new_variant_search_path,
+          has_one_box_help: false,
+          default_criteria: [:passing, :frequency, :frequency_operator, :upstream_bases],
+        }
+      ) %>
+
+      <div class="help">
+        <h2>What Can You Do?</h2>
+        <p>
+          With the one box query, you can quickly make certain queries as shown in the table below.
+        </p>
+        <dl class="dl-kv example">
+          <% examples.each do | example | %>
+            <dt><%= example[:type] %></dt>
+            <dd><code><%= example[:example] %></code></dd>
+          <% end %>
+        </dl>
+
+        <h2>The Default Criteria</h2>
+
+        <p>
+          When you use the One Box Query, here is the default criteria.
+        </p>
+
+        <dl class="row dl-kv">
+          <dt class="col-6">Variant quality</dt>
+          <dd class="col-6">Passing</dd>
+          <dt class="col-6">Control Database Frequency</dt>
+          <dd class="col-6"><= 0.01</dd>
+          <dt class="col-6">Affection</dt>
+          <dd class="col-6">Affected</dd>
+          <dt class="col-6">Damage Potential</dt>
+          <dd class="col-6">High</dd>
+        </dl>
+
+        <p>Use the Advanced Query for alternative query parameters.</p>
       </div>
-      <div class="col-lg-6 d-flex justify-content-lg-end align-items-lg-center">
-        <%= link_to VariantSearch.human_attribute_name(:history), variant_searches_path, class: 'btn btn-secondary' %>
-        <%= link_to VariantSearch.human_attribute_name(:saved_history), saved_variant_searches_path, class: 'btn btn-secondary ml-3' %>
-        <%= link_to VariantSearch.human_attribute_name(:advanced), new_variant_search_path, class: 'btn btn-secondary ml-3' %>
-      </div>
-    </div>
-    <%= simple_form_for @variant_search do |f| %>
-      <%= content_tag :h4, VariantSearch.human_attribute_name(:search_defaults).html_safe, class: "help-block" %>
-      <%= f.input :search, autofocus: true, label: false, placeholder: VariantSearch.human_attribute_name(:search_placeholder) %>
-      <%= f.input :passing, as: :hidden %>
-      <%= f.input :frequency, as: :hidden %>
-      <%= f.input :frequency_operator, as: :hidden %>
-      <%= f.input :upstream_bases, as: :hidden %>
-      <%= content_tag :h4, VariantSearch.human_attribute_name(:search_popover).html_safe, class: "help-block" %>
-      <%= f.button :submit, class: 'd-none', id: 'hidden_button' %>
-    <% end %>
+  </div>
+
+
   </div>
 </div>

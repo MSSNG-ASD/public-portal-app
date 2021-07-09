@@ -1,4 +1,4 @@
-<h1><%= dt("#{controller_name}.#{action_name}.title", :model => dt("#{controller_name}.#{action_name}.model"), :instance => @user.email) %></h1>
+<h1 class="title"><%= dt("#{controller_name}.#{action_name}.title", :model => dt("#{controller_name}.#{action_name}.model"), :instance => @user.email).html_safe %></h1>
 <% if @user == current_user %>
 <div class="panel panel-default">
   <div class="panel-heading"><%= User.human_attribute_name(:gene_searches) %></div>

@@ -12,7 +12,6 @@
 //
 //= require rails-ujs
 //= require jquery3
-//= require igv
 //= require clipboard
 //= require popper
 //= require select2

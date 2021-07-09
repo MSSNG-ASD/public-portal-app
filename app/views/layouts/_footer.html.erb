@@ -1,12 +1,27 @@
-<footer class="autism">
-  <div class="container-fluid">
-    <% if user_signed_in? %>
-      <small>
-        Dataset: <%= Rails.configuration.x.query['project_id'] %>:<%= Rails.configuration.x.query['dataset_id'] %>
-      </small>
-    <% end %>
-    <%= link_to 'http://mss.ng/', class: 'autism', target: "_blank" do %>
-      <p class="text-regular">mss.ng</p>
-    <% end %>
+<footer>
+  <div class="project non-essential">
+    <div class="inner">
+      <%= link_to 'https://mss.ng/', class: 'link-to-mssng-homepage', target: "_blank" do %>
+        mss.ng
+      <% end %>
+    </div>
+  </div>
+
+  <% query_config = Rails.configuration.x.query['db6'] %>
+  <div class="data-source-info non-essential">
+    <div class="inner" title="The selected dataset is <%= query_config['project_id'] %>.<%= query_config['dataset_id'] %>.">
+      <div class="icon"><span class="fa fa-database"></span></div>
+      <div class="project-id"><%= query_config['project_id'] %></div>
+      <div class="dataset-id"><%= query_config['dataset_id'] %></div>
+    </div>
+  </div>
+
+  <div class="sponsor">
+    <div class="inner">
+      <span>A project by</span>
+      <%= link_to 'https://www.autismspeaks.org/', class: 'link-to-autism-speaks', target: "_blank" do %>
+        Autism Speaks
+      <% end %>
+    </div>
   </div>
 </footer>

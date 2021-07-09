@@ -1,9 +1,89 @@
+<%
+  tbl_samples_columns = {
+    submittedid: {label: SubjectSample.human_attribute_name(:submittedid)},
+    dnasource:   {label: SubjectSample.human_attribute_name(:dnasource)},
+    platform:    {label: SubjectSample.human_attribute_name(:platform)},
+  }
+
+  tbl_samples_rows = @samples.map do | sample |
+    row = {}
+
+    tbl_samples_columns.keys.each do | column |
+      value = sample.send(column)
+
+      # This is to add an indicator if sample ID is present in the address bar.
+      # NOTE: This is disabled due to confusion.
+      # if !params[:sample].nil? and column.eql? :submittedid and value.eql? params[:sample]
+      #   value = "#{value}<span style=\"display: inline-block; border-radius: 8px; height: 12px; width: 12px; background-color: red;margin-left: 6px\"></span>".html_safe
+      # end
+
+      row[column] = value
+    end
+
+    row
+  end
+%>
+<%
+  tbl_measures_columns = {
+      relevance: {label: SubjectSample.human_attribute_name(:relevance)},
+      testdate:  {label: SubjectSample.human_attribute_name(:date), style: "white-space: nowrap"},
+      test:      {label: SubjectSample.human_attribute_name(:test)},
+      question:  {label: SubjectSample.human_attribute_name(:question)},
+      measure:   {label: SubjectSample.human_attribute_name(:value), style: "white-space: nowrap"},
+      legend:    {label: SubjectSample.human_attribute_name(:legend)},
+  }
+
+  tbl_measures_rows = @measures.map do | measure |
+    row = {}
+
+    tbl_measures_columns.keys.each do | column |
+      row[column] = measure.send(column)
+    end
+
+    row
+  end
+%>
+
 <div class="row">
   <div class="col">
-    <h1><%= dt("#{controller_name}.#{action_name}.title", model: dt("#{controller_name}.#{action_name}.model"), instance: @subject_sample.submittedid) %></h1>
+    <h1 class="title">
+      <span class="secondary">Subject</span>
+      <%= @subject_id %>
+    </h1>
+
+    <section>
+
+      <h2><%= @samples.size %> Sample<%= @samples.size == 1 ? '' : 's' %> Found</h2>
+
+      <%= render(
+            partial: 'layouts/common_horizontal_table',
+            locals: {
+                table_id: 'samples',
+                table_classes: 'table-striped',
+                columns: tbl_samples_columns,
+                rows: tbl_samples_rows,
+            }
+          ) %>
+    </section>
+
+    <section>
+      <h2>Measures</h2>
+
+      <%= render(
+              partial: 'layouts/common_horizontal_table',
+              locals: {
+                  table_id: 'datatable_all',
+                  table_classes: 'table-striped',
+                  columns: tbl_measures_columns,
+                  rows: tbl_measures_rows,
+              }
+          ) %>
+
+    </section>
   </div>
 </div>
-<%= render partial: "subject_sample", locals: { subject_sample: @subject_sample } %>
+
+
 <div class="row">
   <div class="col form-actions">
 		<%= link_to dt('actions.back'), :back, class: 'btn btn-primary' %>

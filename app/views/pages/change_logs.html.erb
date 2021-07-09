@@ -1,0 +1,42 @@
+<% if params[:entry_id].nil? %>
+  <h1 class="title">Release Notes</h1>
+
+  <p class="lead">Here are the change history.</p>
+
+  <ul>
+    <% release_notes.each_with_index do | release_note, index | %>
+      <li>
+        <%= link_to(
+          release_note[:entry_id],
+          controller: 'visitors',
+          action: 'change_logs',
+          entry_id: release_note[:entry_id])
+        %>
+        <% if index == 0 %>
+          <span class="badge badge-primary">Latest</span>
+        <% end %>
+      </li>
+    <% end %>
+  </ul>
+<% else %>
+  <h1 class="title">
+    <span class="secondary">
+      <%= link_to "Release Notes", controller: 'visitors', action: 'change_logs', entry_id: nil %>
+    </span>
+    <%= params[:entry_id] %>
+  </h1>
+
+  <article>
+    <%= render_md_to_html("data/change_logs/#{params[:entry_id]}.md").html_safe %>
+  </article>
+
+  <script>
+    window.addEventListener('load', function () {
+      document.querySelectorAll('table').forEach(function (table) {
+        table.classList.add('table');
+        table.classList.add('table-bordered');
+        table.classList.add('table-striped');
+      });
+    });
+  </script>
+<% end %>

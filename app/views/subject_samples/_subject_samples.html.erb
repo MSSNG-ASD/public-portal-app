@@ -1,22 +1,24 @@
 <div class="row">
-  <table id="datatable_all" class="table table-striped table-bordered">
-    <thead>
-  	  <tr>
-  	    <th><%= SubjectSample.human_attribute_name(:SUBMITTEDID) %></th>
-  	    <th><%= SubjectSample.human_attribute_name(:INDEXID) %></th>
-  	    <th><%= SubjectSample.human_attribute_name(:DNASOURCE) %></th>
-  	    <th><%= SubjectSample.human_attribute_name(:PLATFORM) %></th>
-   	  </tr>
-    </thead>
-    <tbody>
-  		<% subject_samples.each do |subject_sample| %>
-  		  <tr>
-  		    <td><%= link_to subject_sample.SUBMITTEDID, subject_sample_path(subject_sample) %></td>
-  		    <td><%= subject_sample.INDEXID %></td>
-  		    <td><%= subject_sample.DNASOURCE %></td>
-  		    <td><%= subject_sample.PLATFORM %></td>
-   		  </tr>
-  		<% end %>
-    </tbody>
-  </table>
+  <div class="col">
+    <table id="datatable_all" class="table table-striped table-bordered">
+      <thead>
+        <tr>
+          <th><%= SubjectSample.human_attribute_name(:INDEXID) %></th>
+          <th><%= SubjectSample.human_attribute_name(:SUBMITTEDID) %></th>
+          <th><%= SubjectSample.human_attribute_name(:DNASOURCE) %></th>
+          <th><%= SubjectSample.human_attribute_name(:PLATFORM) %></th>
+        </tr>
+      </thead>
+      <tbody>
+        <% subject_samples.each do |subject_sample| %>
+          <tr>
+            <td><%= link_to subject_sample.INDEXID, subject_sample_path(subject_sample.INDEXID) %></td>
+            <td><%= subject_sample.SUBMITTEDID %></td>
+            <td><%= subject_sample.DNASOURCE %></td>
+            <td><%= subject_sample.PLATFORM %></td>
+          </tr>
+        <% end %>
+      </tbody>
+    </table>
+  </div>
 </div>

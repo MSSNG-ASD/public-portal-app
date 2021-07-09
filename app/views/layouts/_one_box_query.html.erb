@@ -1,0 +1,46 @@
+<div class="one-box-query <%= selection_url.nil? ? 'single-input' : 'multiple-inputs' %>">
+  <h1 class="title"><%= target.class.model_name.human %></h1>
+
+  <%= simple_form_for target do |f| %>
+    <div class="one-box-control">
+      <% if !selection_url.nil? %>
+        <%= f.input(
+          :search,
+          label: false,
+          autofocus: true,
+          input_html: {
+            class: 'ajax-multi-select2-submit',
+            data: {
+              records: f.object.genes,
+              url: selection_url,
+              multiple: true,
+              minimum: 2,
+              placeholder: f.object.class.human_attribute_name(:gene_ids_placeholder)
+            }
+          }
+        ) %>
+      <% else %>
+        <%= f.input :search, autofocus: true, label: false, placeholder: target.class.human_attribute_name(:search_placeholder) %>
+        <button type="submit" class="btn btn-primary" title="Start the query">→</button>
+      <% end %>
+    </div>
+    <small class="form-text text-muted">
+      <%= quick_help_text.html_safe %>
+    </small>
+    <% default_criteria.each do | field | %>
+      <%= f.input field, as: :hidden %>
+    <% end %>
+    <%= f.button :submit, class: 'd-none', id: 'hidden_button' %>
+  <% end %>
+
+  <div class="more-actions">
+    <%= link_to target.class.human_attribute_name(:history), query_history_url, class: '' %>
+    <%= link_to target.class.human_attribute_name(:saved_history), saved_queries_url, class: '' %>
+    <%= link_to target.class.human_attribute_name(:advanced), advanced_query_url, class: '' %>
+
+    <% if !has_one_box_help.nil? and has_one_box_help %>
+    <%= has_one_box_help ? 'ye' : 'ne' %>
+      <a class="one-box-help-trigger" href="#help" onclick="$('.one-box-help').toggleClass('hidden'); return false;">How to use the One Box query?</a>
+    <% end %>
+  </div>
+</div>

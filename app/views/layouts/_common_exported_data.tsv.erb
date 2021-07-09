@@ -1,0 +1,36 @@
+<%
+
+   if search.variants.present? && search.variants.count != search.variants.first.results_count
+     raise RuntimeError, "Unable to export. Only #{variants.count} of #{variants.first.results_count} records returned."
+   end
+   ignored_columns = ['igv', 'prioritizations', 'comp_het_rec', 'category', 'call_phaseset']
+   columns = search.user.selected_preferences.reject { | column | ignored_columns.include? column }
+   empty_string = '""'
+   inheritance_map = search.inheritance
+%><%=
+  (columns.map { | column | AnnotatedVariant.human_attribute_name(column.to_sym) }).join("\t")
+%><% search.variants.each do | row | %>
+<%= (
+    columns.map do | column |
+      value = row.send(column.to_sym)
+
+      if column.eql? 'prioritizations'
+        inheritance_text = inheritance_map[row.sample_id][row.annotation_id]
+        if search.symbols.include?(variant.gene_symbol)
+          value = row.prioritizations(inheritance_text).map {|p| Trio.human_attribute_name(p)}.join(", ")
+        else
+          value = (row.prioritizations(inheritance_text) - [:het_risk]).map {|p| Trio.human_attribute_name(p)}.join(", ")
+        end
+      elsif column.eql? 'inheritance'
+        value = get_inheritance_string(search, row)
+      elsif column.eql?'letter_genotype'
+        value = row.letter_genotype.split(",").map {|g| shorten(g)}.join(",")
+      elsif column.eql? 'de_novo'
+        value = row.send(column.to_sym) ? 'High-confidence' : empty_string
+      elsif column.eql? 'affection'
+        value = row.interpretted_affection
+      end
+
+      value.nil? ? empty_string : value
+    end
+).join("\t") %><% end %>

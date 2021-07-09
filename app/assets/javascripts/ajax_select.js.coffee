@@ -1,6 +1,6 @@
 jQuery ->
   $('.select2').select2({
-    allowClear: true
+    allowClear: true,
   });
 
 jQuery ->
@@ -20,6 +20,6 @@ jQuery ->
     $(this).ajaxSelect(url, options)
 
 jQuery ->
-	$('.ajax-multi-select2-submit').on 'keyup', (e) ->
-	  if e.keyCode == 13
-	    $(this).closest('form').submit()
+  $('.ajax-multi-select2-submit').on 'keyup', (e) ->
+    if e.keyCode == 13
+      $(this).closest('form').submit()

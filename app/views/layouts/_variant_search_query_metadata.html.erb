@@ -1,0 +1,59 @@
+<% primary_job_stat = search.primary_job.stat %>
+<% query_time = (primary_job_stat['endTime'].to_i * 1.0 - primary_job_stat['creationTime'].to_i) / 1000 %>
+<% processed_data_size = primary_job_stat['query']['totalBytesProcessed'].to_i / 1024.0 / 1024 / 1024 %>
+<% max_variant_shown_count = 500 %>
+<% variant_shown_count = search.variants.count %>
+<% variant_total_count = variant_shown_count == 0 ? 0 : search.variants.first.results_count %>
+
+<div class="row query-metadata">
+  <div class="col-12 result-metadata">
+    <% if variant_shown_count > 0 %>
+      <%= render partial: "layouts/save_query_form", locals: { search: search, edit_search_url: edit_search_url, delete_search_url: delete_search_url } %>
+
+      <div class="column-visibility">
+        <%= link_to '<span class="fa fa-gear"></span>️ Show/hide columns'.html_safe, "#", :data => {:placement => "top", :toggle => "modal", :target => '#preferences-modal'}, class: 'btn btn-dark' %>
+      </div>
+
+      <div class="export-links">
+        <% export_options.each_with_index do | export_option, export_option_index | %>
+          <% if export_option_index > 0 %>or<% end %>
+          <%= link_to "Export as #{export_option[:label]}", export_option[:url], class: 'btn btn-dark', title: export_option[:help] %>
+        <% end %>
+      </div>
+    <% else %>
+      <%= render partial: "layouts/save_query_form", locals: { search: search, edit_search_url: edit_search_url, delete_search_url: delete_search_url } %>
+    <% end %>
+
+    <% if variant_shown_count > max_variant_shown_count %>
+      <div class="more-result-info">
+        This query has exceeded the maximum of <%= max_variant_shown_count %> variants; the first <%= max_variant_shown_count %>
+        are being returned. To obtain all search results, please export the data as TSV.
+      </div>
+    <% end %>
+
+    <div class="result-job">
+      <div class="result-counter">
+        <% if variant_shown_count == 0 %>
+          <b>No</b> results shown
+        <% elsif variant_shown_count != variant_total_count %>
+          <b>Showing <%= [max_variant_shown_count, variant_shown_count].min %></b> of <b><%= variant_total_count %></b> result<%= variant_total_count == 1 ? '' : 's' %>
+        <% else %>
+          <b><%= [max_variant_shown_count, variant_shown_count].min %></b> result<%= variant_total_count == 1 ? '' : 's' %>
+        <% end %>
+      </div>
+
+      <!--
+      <div class="result-query-time">
+        <b><%= "%.3f" % (query_time) %></b> sec
+      </div>
+      -->
+
+      <div class="result-data-processed">
+        <b><%= processed_data_size == 0 ? "0" : ("%.3f" % (processed_data_size)) %></b> GB processed
+        <% if primary_job_stat['query']['cacheHit'] %>
+          <span class="badge badge-success">cached</span>
+        <% end %>
+      </div>
+    </div>
+  </div>
+</div>

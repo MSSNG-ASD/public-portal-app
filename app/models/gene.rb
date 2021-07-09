@@ -24,16 +24,25 @@ class Gene < EntrezDbBase
     "NC_0000" + chrom.sub(/X/, "23").sub(/Y/, "24")
   end
 
-  # not sure if this is used
   def range
     @range ||= set_range
   end
 
 private
 
-  # not sure if this is used
   def set_range
-    ref_gene = ref_genes.first
-    [ref_gene.txStart, ref_gene.txEnd]
+    if ref_genes.empty?
+      return nil
+    end
+
+    start_positions = []
+    end_positions = []
+
+    ref_genes.each do |ref_gene|
+      start_positions << ref_gene.txStart
+      end_positions << ref_gene.txEnd
+    end
+
+    [start_positions.min, end_positions.max]
   end
 end

@@ -4,8 +4,13 @@ class AnnotationsController < ApplicationController
   respond_to :html
 
   def show
-    @annotation = Annotation.find(current_user, params[:id])
-    respond_with(@annotation)
+    @target_table = params[:source].present? ? params[:source] : nil
+    @annotation = Annotation.find(current_user, params[:id], target_table: @target_table)
+    if @annotation.nil?
+      raise ActiveRecord::RecordNotFound, params[:id]
+    else
+      respond_with(@annotation)
+    end
   end
 
 end

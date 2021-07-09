@@ -4,7 +4,8 @@ class Subject
   include ActiveModel::Model
 
   def self.table
-    @@table = "`#{Rails.configuration.x.query['dataset_id']}.#{Rails.configuration.x.query['subjects']}`"
+    search_config = Rails.configuration.x.query['db6']
+    @@table = "`#{search_config['project_id']}.#{search_config['tables']['subjects']}`"
   end
 
   def self.primary_key
@@ -17,17 +18,17 @@ class Subject
 
   def self.search(user, name = nil)
     sql = "select #{attrs.join(', ')} from #{table} where #{primary_key} like '#{name}%' order by #{primary_key} limit 10"
-    BigQuery.new(user.credentials).exec_query(sql).map {|record| Subject.new(record)}
+    BigQuery.new(user.credentials).exec_query(sql).all.map {|record| Subject.new(record)}
   end
 
   def self.find(user, id)
     sql = "select #{attrs.join(', ')} from #{table} where #{primary_key} = '#{id}'"
-    BigQuery.new(user.credentials).exec_query(sql).map {|record| Subject.new(record)}.first
+    BigQuery.new(user.credentials).exec_query(sql).all.map {|record| Subject.new(record)}.first
   end
 
   def self.where(user, clause)
     sql = "select #{attrs.join(', ')} from #{table} where #{clause}"
-    BigQuery.new(user.credentials).exec_query(sql).map {|record| Subject.new(record)}
+    BigQuery.new(user.credentials).exec_query(sql).all.map {|record| Subject.new(record)}
   end
 
   # getter/setter methods for result columns

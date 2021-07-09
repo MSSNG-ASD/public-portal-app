@@ -1,0 +1,10 @@
+<table id="<%= table_id %>" class="table table-vertical table-bordered">
+  <tbody>
+    <% kv.each do | k, v | %>
+      <tr>
+        <th class="dt-key" scope="row"><%= k %></th>
+        <td class="dt-value" data-test-key="<%= k %>"><%= v %></td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>

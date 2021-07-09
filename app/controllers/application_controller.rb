@@ -14,13 +14,40 @@ class ApplicationController < ActionController::Base
     search_variant_searches_path
   end
 
+  def truncate_preference(given_preference)
+    truncated_preference = {}
+
+    given_preference.each do | k, v |
+      # if v.empty?
+      #   next
+      # end
+
+      if v.class == Array
+        total_count = v.length
+        v.each do | i |
+          if i.empty?
+            total_count -= 1
+          end
+        end
+
+        if total_count <= 0
+          next
+        end
+      end
+
+      truncated_preference[k] = v
+    end
+
+    truncated_preference
+  end
+
   private
 
   # all application actions must have bigquery access
   def authorize_bigquery
     if user_signed_in? && !current_user.credentials.access_token.present?
       reset_session
-      redirect_to root_url, alert: "User #{current_user.email} is not authorized for BigQuery access to #{Rails.application.secrets[:project_id]}:mssng_20171020a"
+      redirect_to root_url, alert: "User #{current_user.email} is not authorized for BigQuery access"
     end
   end
 

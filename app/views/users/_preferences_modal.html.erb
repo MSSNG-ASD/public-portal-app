@@ -1,26 +1,66 @@
-<div class="modal fade" id="preferences-modal" tabindex="-1" role="dialog" aria-labelledby="preferences-modal-label" aria-hidden="true">
+<% query_config = Rails.configuration.x.query %>
+<div class="modal" id="preferences-modal" tabindex="-1" role="dialog" aria-labelledby="preferences-modal-label" aria-hidden="true">
   <div class="modal-dialog">
     <div class="modal-content">
       <div class="modal-header">
-        <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
-        <h4 class="modal-title" id="preferences-modal-label"><%= dt('navbar.preferences') %></h4>
+        <h4 class="modal-title" id="preferences-modal-label">
+          <%= dt('navbar.preferences') %>
+          <span class="feedback"></span>
+        </h4>
+        <button type="button" class="close" data-dismiss="modal">
+          <span aria-hidden="true">&times;</span><span class="sr-only">User Preference Close</span>
+        </button>
       </div>
       <div class="modal-body">
-	<div class="row">
-		<div class="col-md-2"></div>
-		<div class="col-md-10">
-			<%= link_to content_tag(:i, "Defaults"), "#", :class => 'btn btn-primary pull-right', :id => 'default-reset', :data => {:toggle => "tooltip", :placement => "left"}, :title => dt('actions.reset')%>
-			<%= form_for user, remote: true do |f| %>
-				<input name="authenticity_token" type="hidden" value="<%= form_authenticity_token %>"/>
-				<% Rails.configuration.x.query['selectable_preferences'].flatten.each do |pref| %>
-					<% default_class = Rails.configuration.x.query['selected_preferences'].include?(pref) ? "default-setting" : "non-default-setting" %>
-					<p><%= f.check_box pref.to_sym, :class => default_class %> <%= f.label pref.to_sym, AnnotatedVariant.human_attribute_name(pref.to_sym) %></p>
-				<% end %>
-        <%= f.button :submit, class: 'd-none', id: 'hidden_submit_preferences_button' %>
-      <% end %>
-		</div>
-	</div>
+        <div class="row">
+          <div class="col-md-1"></div>
+          <div class="col-md-10">
+            <a href="#reset" id="user-preference-reset" class="btn btn-primary pull-right">Defaults</a>
+            <%= form_for user, html: {class: 'edit_user no-loading-indicator'}, remote: true do |f| %>
+              <input name="authenticity_token" type="hidden" value="<%= form_authenticity_token %>"/>
+              <% query_config['selectable_preferences'].flatten.each do |pref| %>
+                <% default_class = query_config['selected_preferences'].include?(pref) ? "default-setting" : "non-default-setting" %>
+                <% label = AnnotatedVariant.human_attribute_name(pref.to_sym) %>
+                <p data-key="<%= pref %>">
+                  <%= f.check_box(
+                    pref.to_sym,
+                    :class => default_class,
+                    :data => {:label => label}
+                  ) %>
+                  <%= f.label(
+                    pref.to_sym,
+                    label,
+                    :data => {:label => label}
+                  ) %>
+                </p>
+              <% end %>
+              <%= f.button :submit, class: 'd-none', id: 'hidden_submit_preferences_button' %>
+            <% end %>
+          </div>
+          <div class="col-md-1"></div>
+        </div>
       </div>
     </div>
   </div>
 </div>
+
+<style>
+#preferences-modal .feedback:empty {
+  display: none;
+}
+
+#preferences-modal .feedback {}
+
+#preferences-modal form.edit_user input[type="checkbox"] {
+  margin-right: 8px;
+}
+
+#preferences-modal form.edit_user input[type="checkbox"] + label {
+  cursor: pointer;
+  color: #666;
+}
+
+#preferences-modal form.edit_user input[type="checkbox"]:checked + label {
+  color: black;
+}
+</style>

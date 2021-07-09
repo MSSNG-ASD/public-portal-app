@@ -1,28 +1,32 @@
-<nav class="navbar navbar-dark <%= user_signed_in? ? 'navbar-expand-lg' : 'navbar-expand' %> fixed-top">
-  <div class="container-fluid">
+<nav class="navbar navbar-dark justify-content-between navbar-expand-lg fixed-top">
+  <a class="navbar-brand" href="/">
+    <%= image_tag('header-mssng-logo.png', alt: 'MSSNG logo') %>
+  </a>
 
-    <div class="navbar-brand">
-      <%= image_tag('header-mssng-logo.png', alt: 'MSSNG logo') %>
-      <aside>A project by <span>Autism Speaks</span></aside>
-    </div>
+  <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#mainNavbar" aria-controls="mainNavbar" aria-expanded="false" aria-label="Toggle navigation">
+    <span class="navbar-toggler-icon"></span>
+  </button>
 
-    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#mainNavbar" aria-controls="mainNavbar" aria-expanded="false" aria-label="Toggle navigation">
-      <span class="navbar-toggler-icon"></span>
-    </button>
-
-    <div class="collapse navbar-collapse justify-content-end" id="mainNavbar">
+  <div class="collapse navbar-collapse justify-content-end" id="mainNavbar">
+    <ul class="navbar-nav">
       <% if user_signed_in? %>
-        <ul class="navbar-nav">
-           <%= render 'layouts/navigation_links' %>
-        </ul>
+        <%# This is for authenticated users. %>
+        <%= render 'layouts/navigation_links' %>
       <% else %>
-        <div class="navbar-nav" id="sign-in-button">
-          <%= link_to "About", visitors_about_path, class: "btn" %>
-          <%= link_to "Publications", visitors_publications_path, class: "btn" %>
-          <%= link_to dt('navbar.signin'), signin_path, class: 'btn btn-primary' %>
-        </div>
+        <%# This is for unauthenticated users. %>
+        <li class="nav-item">
+          <%= link_to "About", visitors_about_path, class: "nav-link" %>
+        </li>
+        <li class="nav-item">
+          <%= link_to "Publications", publications_path, class: "nav-link" %>
+        </li>
+        <li class="nav-item">
+          <%= link_to "Release Notes", release_notes_path, class: "nav-link" %>
+        </li>
+        <li class="nav-item">
+          <%= link_to dt('navbar.signin'), signin_path, class: 'nav-link' %>
+        </li>
       <% end %>
-    </div>
-
+    </ul>
   </div>
 </nav>
